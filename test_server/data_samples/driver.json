@@ -1,0 +1,101 @@
+[
+    {
+        "id": 123456789,
+        "firstName": "John",
+        "lastName": "Doe",
+        "countryCode": "IT",
+        "vat": "IT0011228901",
+        "license": {
+            "id": "IT1234567890",
+            "countryCode": "IT",
+            "category": [
+                {
+                "type": "C",
+                "description": "Goods Vehicle",
+                "issueDate": "2020-01-01",
+                "expiryDate": "2025-12-31",
+                "status": "VALID",
+                "code95": "95 (13.02.25)"
+                }
+            ]
+        },
+        "trafficViolation": [
+        {
+            "id": 123456789,
+            "description": "Speeding",
+            "code": "SV-123",
+            "countryCode": "IT",
+            "fine": 150,
+            "paymentDueDate": "2023-07-15",
+            "paymentDate": "2023-07-10",
+            "isPaid": true,
+            "validityPoints": 1
+        }
+        ],
+        "tachographCard": [
+        {
+            "id": "IT123423456",
+            "drivingInterval": [
+            {
+                "startDateTime": "2023-06-20T08:00:00Z",
+                "endDateTime": "2023-06-20T18:00:00Z",
+                "etl": [
+                {
+                    "type": "Daily driving limit",
+                    "hours": 1,
+                    "minutes": 1,
+                    "seconds": 20
+                }
+                ]
+            }
+            ]
+        }
+        ]
+    },
+    {
+        "id": 987654321,
+        "firstName": "Jane",
+        "lastName": "Smith",
+        "countryCode": "IT",
+        "vat": "IT9988776655",
+        "license": {
+            "id": "IT0987654321",
+            "countryCode": "IT",
+            "category": [
+                {
+                "type": "D",
+                "description": "Passenger Vehicle",
+                "issueDate": "2018-05-15",
+                "expiryDate": "2024-05-14",
+                "status": "VALID",
+                "code95": null
+                }
+            ]
+        },
+        "trafficViolation": [],
+        "tachographCard": []
+    },
+    {
+        "id": 1122334455,
+        "firstName": "Alice",
+        "lastName": "Johnson",
+        "countryCode": "IT",
+        "vat": "IT5566778899",
+        "license": {
+            "id": "IT1122334455",
+            "countryCode": "IT",
+            "category": [
+                {
+                "type": "B",
+                "description": "Light Vehicle",
+                "issueDate": "2019-03-10",
+                "expiryDate": "2039-03-10",
+                "status": "VALID",
+                "code95": null
+                }
+            ]
+        },
+        "trafficViolation": [],
+        "tachographCard": []
+    }
+]

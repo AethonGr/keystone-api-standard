@@ -1,0 +1,102 @@
+[
+  {
+    "id": 123456789,
+    "countryCode": "IT",
+    "plateNumber": "AA1232",
+    "type": "Truck",
+    "model": "XX Model",
+    "geolocation": [
+      {
+        "dateTime": "2023-06-25T10:00:00Z",
+        "coordinates": {
+          "latitude": 34.052235,
+          "longitude": -118.243683
+        }
+      },
+      {
+        "dateTime": "2023-06-25T10:00:05Z",
+        "coordinates": {
+          "latitude": 34.052236,
+          "longitude": -118.243684
+        }
+      },
+      {
+        "dateTime": "2023-06-25T10:00:10Z",
+        "coordinates": {
+          "latitude": 34.052237,
+          "longitude": -118.243685
+        }
+      }
+    ],
+    "owner": {
+      "id": 123456789,
+      "name": "Acme Trucking",
+      "vat": "IT2345678901"
+    },
+    "insurance": [
+      {
+        "id": 123456789,
+        "name": "AB Insurance",
+        "number": "KST-123456789",
+        "isInsured": true,
+        "activationDate": "2023-01-15",
+        "expirationDate": "2024-01-14"
+      }
+    ],
+    "revision": [
+      {
+        "id": 123456789,
+        "name": "Revision Comp",
+        "number": "A-2211",
+        "executionDate": "2023-01-15",
+        "expirationDate": "2024-01-14"
+      }
+    ]
+  },
+    {
+      "id": 987654321,
+      "countryCode": "IT",
+      "plateNumber": "BB4567",
+      "type": "Truck",
+      "model": "YY Model",
+      "owner": {
+        "id": 987654321,
+        "name": "XYZ Logistics",
+        "vat": "IT9876543210"
+      },
+      "insurance": [
+        {
+          "id": 987654321,
+          "name": "CD Insurance",
+          "number": "KST-987654321",
+          "isInsured": true,
+          "activationDate": "2023-01-15",
+          "expirationDate": "2024-01-14"
+        },
+        {
+          "id": 987654322,
+          "name": "EF Insurance",
+          "number": "KST-987654322",
+          "isInsured": false,
+          "activationDate": "2023-01-15",
+          "expirationDate": "2024-01-14"
+        }
+      ],
+      "revision": [
+        {
+          "id": 987654321,
+          "name": "Revision Comp",
+          "number": "B-2211",
+          "executionDate": "2023-01-15",
+          "expirationDate": "2024-01-14"
+        },
+        {
+          "id": 987654322,
+          "name": "Revision Comp",
+          "number": "C-2211",
+          "executionDate": "2022-01-15",
+          "expirationDate": "2023-01-14"
+        }
+      ]
+    }
+]

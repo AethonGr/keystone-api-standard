@@ -1,0 +1,300 @@
+[  
+  {
+    "id": 123456789,
+    "operator": {
+      "name": "ABC Logistics",
+      "countryCode": "IT",
+      "vat": "IT1234567890",
+      "address": "123 Main St, City, Country"
+    },
+    "schedule": {
+      "departureDateTime": "2023-06-25T10:00:00Z",
+      "realDepartureDateTime": "2023-06-27T10:30:00Z",
+      "estimatedDateTimeOfArrival": "2023-06-27T17:00:00Z",
+      "realArrivalDateTime": "2023-06-27T17:20:00Z"
+    },
+    "driver": {
+      "id": 123456789,
+      "firstName": "John",
+      "lastName": "Doe",
+      "countryCode": "IT",
+      "vat": "IT0011228901",
+      "license": {
+        "id": "IT1234567890",
+        "countryCode": "IT",
+        "category": [
+          {
+            "type": "C",
+            "description": "Goods Vehicle",
+            "issueDate": "2020-01-01",
+            "expiryDate": "2025-12-31",
+            "status": "VALID",
+            "code95": "95 (13.02.25)"
+          }
+        ]
+      },
+      "trafficViolation": [
+        {
+          "id": 123456789,
+          "description": "Speeding",
+          "code": "SV-123",
+          "countryCode": "IT",
+          "fine": 150,
+          "paymentDueDate": "2023-07-15",
+          "paymentDate": "2023-07-10",
+          "isPaid": true,
+          "validityPoints": 1
+        }
+      ],
+      "tachographCard": [
+        {
+          "id": "IT12340123456",
+          "drivingInterval": [
+            {
+              "startDateTime": "2023-06-20T08:00:00Z",
+              "endDateTime": "2023-06-20T18:00:00Z",
+              "etl": [
+                {
+                  "type": "Daily driving limit",
+                  "hours": 1,
+                  "minutes": 1,
+                  "seconds": 20
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "vehicle": {
+      "id": 123456789,
+      "countryCode": "IT",
+      "plateNumber": "AA1232",
+      "type": "Truck",
+      "model": "XX Model",
+      "geolocation": [
+        {
+          "dateTime": "2023-06-25T10:00:00Z",
+          "coordinates": {
+            "latitude": 34.052235,
+            "longitude": -118.243683
+          }
+        }
+      ],
+      "owner": {
+        "id": 123456789,
+        "name": "Acme Trucking",
+        "vat": "IT2345678901"
+      },
+      "insurance": [
+        {
+          "id": 123456789,
+          "name": "AB Insurance",
+          "number": "KST-123456789",
+          "isInsured": true,
+          "activationDate": "2023-01-15",
+          "expirationDate": "2024-01-14"
+        }
+      ],
+      "revision": [
+        {
+          "id": 123456789,
+          "name": "Revision Comp",
+          "number": "A-2211",
+          "executionDate": "2023-01-15",
+          "expirationDate": "2024-01-14"
+        }
+      ]
+    },
+    "phase": [
+      {
+        "id": 1,
+        "location": {
+          "id": 123456789,
+          "description": "Place X",
+          "mode": "GENERIC",
+          "coordinates": {
+            "latitude": 34.052235,
+            "longitude": -118.243683
+          }
+        },
+        "dateTime": "2023-06-25T10:00:00Z",
+        "state": "IN_TRANSIT"
+      }
+    ],
+    "document": [
+      {
+        "referenceCode": "DOC-123456789",
+        "senderOrganization": {
+          "name": "ABC Logistics",
+          "countryCode": "IT",
+          "vat": "IT1234567890",
+          "address": "123 Main St, City, Country"
+        },
+        "receiverOrganization": {
+          "name": "ABC Logistics",
+          "countryCode": "IT",
+          "vat": "IT1234567890",
+          "address": "123 Main St, City, Country"
+        },
+        "startingPoint": {
+          "id": 123456789,
+          "description": "Place X",
+          "mode": "GENERIC",
+          "coordinates": {
+            "latitude": 34.052235,
+            "longitude": -118.243683
+          }
+        },
+        "endingPoint": {
+          "id": 123456789,
+          "description": "Place X",
+          "mode": "GENERIC",
+          "coordinates": {
+            "latitude": 34.052235,
+            "longitude": -118.243683
+          }
+        },
+        "load": {
+          "type": "Electronics",
+          "description": "Laptops, tablets, and smartphones",
+          "weight": 500,
+          "umWeight": "kg",
+          "component": [
+            {
+              "type": "Laptop",
+              "description": "Brand X Laptop",
+              "width": 30,
+              "height": 20,
+              "depth": 5,
+              "unitary": true,
+              "um": "cm"
+            }
+          ]
+        },
+        "report": "report.pdf"
+      }
+    ]
+  },
+  {
+    "id": 123456790,
+    "operator": {
+      "name": "XYZ Transport",
+      "countryCode": "IT",
+      "vat": "IT0987654321",
+      "address": "456 Elm St, City, Country"
+    },
+    "schedule": {
+      "departureDateTime": "2023-06-26T10:00:00Z",
+      "estimatedDateTimeOfArrival": "2023-06-26T17:00:00Z"
+    },
+    "driver": {
+      "id": 123456790,
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "countryCode": "IT",
+      "vat": "IT0011228902",
+      "license": {
+        "id": "IT0987654321",
+        "countryCode": "IT",
+        "category": [
+          {
+            "type": "C",
+            "description": "Goods Vehicle",
+            "issueDate": "2020-01-01",
+            "expiryDate": "2025-12-31",
+            "status": "VALID",
+            "code95": "95 (13.02.25)"
+          }
+        ]
+      }
+    },
+    "vehicle": {
+      "id": 123456790,
+      "countryCode": "IT",
+      "plateNumber": "BB4567",
+      "type": "Truck",
+      "model": "YY Model",
+      "owner": {
+        "id": 123456790,
+        "name": "XYZ Transport",
+        "vat": "IT0987654321"
+      },
+      "insurance": [
+        {
+          "id": 123456790,
+          "name": "XY Insurance",
+          "number": "KST-987654321",
+          "isInsured": true,
+          "activationDate": "2023-01-15",
+          "expirationDate": "2024-01-14"
+        }
+      ],
+      "revision": [
+        {
+          "id": 123456790,
+          "name": "Revision Comp",
+          "number": "B-2211",
+          "executionDate": "2023-01-15",
+          "expirationDate": "2024-01-14"
+        }
+      ]
+    },
+    "phase": [
+      {
+        "id": 1,
+        "location": {
+          "id": 123456790,
+          "description": "Place Y",
+          "mode": "GENERIC"
+        },
+        "dateTime": "2023-06-26T10:00:00Z",
+        "state": "PLANNING"
+      }
+    ],
+    "document": [
+      {
+        "referenceCode": "DOC-987654321",
+        "senderOrganization": {
+          "name": "XYZ Transport",
+          "countryCode": "IT",
+          "vat": "IT0987654321",
+          "address": "456 Elm St, City, Country"
+        },
+        "receiverOrganization": {
+          "name": "XYZ Transport",
+          "countryCode": "IT",
+          "vat": "IT0987654321",
+          "address": "456 Elm St, City, Country"
+        },
+        "startingPoint": {
+          "id": 123456790,
+          "description": "Place Y",
+          "mode": "GENERIC"
+        },
+        "endingPoint": {
+          "id": 123456790,
+          "description": "Place Y",
+          "mode": "GENERIC"
+        },
+        "load": {
+          "type": "Furniture",
+          "description": "Chairs and tables",
+          "weight": 1000,
+          "umWeight": "kg",
+          "component": [
+            {
+              "type": "Chair",
+              "description": "Office Chair",
+              "width": 50,
+              "height": 100,
+              "depth": 50,
+              "unitary": true,
+              "um": "cm"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

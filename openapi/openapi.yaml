@@ -1,0 +1,4001 @@
+openapi: 3.0.0
+info:
+  title: KEYSTONE API Standard
+  version: v0.1.0
+  license:
+    name: "CC BY 4.0"
+    url: "https://creativecommons.org/licenses/by/4.0/"
+  description: |
+    **KEYSTONE API Standard** OpenAPI Specification is developed by [AETHON Engineering](https://aethon.gr/) as part of the [KEYSTONE project](https://www.keystone-project.com/) ([CORDIS: 101103740](https://cordis.europa.eu/project/id/101103740)), an initiative funded by the European Union’s Horizon Europe programme under the auspices of **DG CINEA** (European Climate, Infrastructure and Environment Executive Agency). This standard is designed to facilitate seamless data exchange within the logistics sector through a set of RESTful APIs.
+
+    It enables streamlined integration across multiple stakeholders, including logistics companies, enforcement agencies, vehicle operators, drivers, and other entities engaged in transport operations.
+
+    This standard supports interoperability and digitalization across the European transport ecosystem.
+
+    ## Relationship between the KEYSTONE API Standard and Integrating Systems
+    The relationship between the KEYSTONE API Standard and the integrating systems can be conceptually illustrated as follows:
+
+    **Figure: API Interaction between Producer and Consumer Systems via Keystone API Standard**
+
+    Conceptually, the KEYSTONE API Standard works as a guidance framework: every Data Producer designs their API according to the shared rules, and every Data Consumer queries APIs that adhere to this guidance. This align-to-the-standard approach replaces tangled point-to-point integrations with a scalable, maintainable architecture. Supplementary tools, like client libraries and modular access scripts, further streamline development, making implementation faster and less error-prone.
+
+    ## Key Features
+    - **Transport Operations**: Manage and track transport operations, including real-time data for transportation phases, route planning, and logistics coordination.
+    - **Vehicle Information**: Access data related to vehicles used in transport operations, including geolocation, registration details, and maintenance status.
+    - **Driver Information**: Retrieve driver data, including qualifications, licenses, tachograph cards, and violation records.
+
+    This specification ensures that users can integrate the **KEYSTONE API Standard** into their systems, enabling smooth, seamless, and secure communication within the logistics ecosystem.
+
+    ## API Structure
+    The **KEYSTONE API Standard** is divided into the following main categories of endpoints:
+    - **Transport Operations**: Covers all aspects of managing and tracking transport operations.
+    - **Vehicles**: Provides access to detailed vehicle data, including geolocation and status.
+    - **Drivers**: Includes information about driver qualifications, licenses, and traffic violations.
+
+    Each path supports operations such as:
+    - **Create (POST)**: Add new data.
+    - **Retrieve (GET)**: Fetch existing data.
+    - **Update (PUT)**: Replace the entire resource.
+    - **Partial Update (PATCH)**: Modify specific fields.
+    - **Delete (DELETE)**: Remove data.
+
+    ## Tags
+    The API uses tags to categorize endpoints into logical groups:
+    - **Transport Operation**: Endpoints for managing transport operations, including schedules, phases, and documents.
+    - **Vehicle**: Endpoints for vehicle management, including geolocation, registration, and maintenance.
+    - **Driver**: Endpoints for managing driver-related information, such as license and violations.
+
+    ## Paths
+    The API defines the following key paths and operations:
+
+    ### Transport Operations
+    - `/transport-operations/`: Create new transport operation data or retrieve all ongoing transport operation data.
+    - `/transport-operations/{transportOperationId}/`: Retrieve, update, or delete specific transport operation data using transport ID.
+    - `/transport-operations/{transportOperationId}/schedules/`: Retrieve or update schedule data related to a specific transport operation using transport ID.
+    - `/transport-operations/{transportOperationId}/phases/`: Retrieve or append phase data related to a specific transport operation using transport ID.
+    - `/transport-operations/{transportOperationId}/phases/{phaseId}/`: Retrieve, update, or delete specific phase data using transport ID and phase ID.
+    - `/transport-operations/{transportOperationId}/documents/`: Retrieve or append the international consignment notes data related to a specific transport operation using transport ID.
+    - `/transport-operations/{transportOperationId}/documents/{referenceCode}/`: Retrieve, update, or delete specific the international consignment notes data using transport ID and reference code.
+    - `/transport-operations/{countryCode}/{plateNumber}/`: Retrieve transport operation data using country code and license plate number.
+    - `/transport-operations/{countryCode}/{plateNumber}/schedules/`: Retrieve the schedule of a transport operation using country code and license plate number.
+    - `/transport-operations/{countryCode}/{plateNumber}/phases/`: Retrieve phase data of a transport operation using country code and license plate number.
+    - `/transport-operations/{countryCode}/{plateNumber}/phases/{phaseId}`: Retrieve specific phase data of a transport operation using country code, license plate number, and phase ID.
+    - `/transport-operations/{countryCode}/{plateNumber}/documents/`: Retrieve the international consignment notes data of a transport operation using country code and license plate number.
+    - `/transport-operations/{countryCode}/{plateNumber}/documents/{referenceCode}/`: Retrieve specific the international consignment notes data of a transport operation using country code, license plate number, and reference code.
+    - `/transport-operations/locations/`: Retrieve all locations related to transport operations.
+    - `/transport-operations/locations/{mode}/`: Retrieve all locations related to transport operations by mode.
+
+    ### Vehicles
+    - `/vehicles/`: Create new vehicle data or retrieve all vehicle data.
+    - `/vehicles/{countryCode}/{plateNumber}/`: Retrieve, update, or delete vehicle data by country code and license plate number.
+    - `/vehicles/{countryCode}/{plateNumber}/geolocations/`: Retrieve or append new geolocation data for a specific vehicle by country code and license plate number.
+    - `/vehicles/{countryCode}/{plateNumber}/owners/`: Retrieve the owner information of a specific vehicle using country code and license plate number.
+    - `/vehicles/{countryCode}/{plateNumber}/insurances/`: Retrieve the insurance information of a specific vehicle using country code and license plate number.
+    - `/vehicles/{countryCode}/{plateNumber}/insurances/{insuranceId}/`: Retrieve specific insurance data using the country code, license plate number, and insurance ID.
+    - `/vehicles/{countryCode}/{plateNumber}/revisions/`: Retrieve the revision information of a specific vehicle using the country code and license plate number.
+    - `/vehicles/{countryCode}/{plateNumber}/revisions/{revisionId}/`: Retrieve specific revision data using the country code, license plate number, and revision ID.
+
+    ### Drivers
+    - `/drivers/`: Create new driver data or retrieve all driver data.
+    - `/drivers/{countryCode}/{vat}/`: Retrieve, update, or delete driver data by country code and vat number.
+    - `/drivers/{countryCode}/{vat}/licenses/`: Retrieve the driver's license information using the country code and vat number.
+    - `/drivers/{countryCode}/{vat}/traffic-violations/`: Retrieve the driver's traffic violation information using the country code and vat number.
+    - `/drivers/{countryCode}/{vat}/traffic-violations/{trafficViolationId}/`: Retrieve specific traffic violation data using the country code, vat number, and traffic violation ID.
+    - `/drivers/{countryCode}/{vat}/tachograph-cards/`: Retrieve the driver's tachograph card data by country code and vat number.
+    - `/drivers/{countryCode}/{vat}/tachograph-cards/{tachographCardId}/`: Retrieve specific tachograph card data using the country code, vat number, and tachograph card ID.
+
+    ## Data Schema
+    The API uses reusable data structures to ensure consistency:
+    - **Transport Operation**: Contains all details related to a transport operation, including phases and international consignment notes.
+    - **Vehicle**: Provides vehicle-specific details, including geolocation, registration, and maintenance information.
+    - **Driver**: Contains driver-specific information, including qualifications, licenses, and tachograph cards.
+
+    ## Integration Guidelines
+    To integrate the **KEYSTONE API Standard** into your system:
+    1. **Understand the Data Flow**: Familiarize yourself with the data models (schemas) and interactions between endpoints.
+    2. **Authentication**: Implement secure authentication mechanisms to ensure only authorized systems can interact with the API.
+    3. **Error Handling**: Use standard HTTP status codes to handle errors gracefully.
+    4. **Data Validation**: Validate input data before sending requests to the API.
+    5. **Version Control**: Monitor updates to the API specification to ensure compatibility.
+    6. **Data Privacy**: Adhere to data privacy regulations when handling sensitive information.
+
+    Follow these steps to smoothly integrate and use the **KEYSTONE API Standard** in your logistics management system or related applications.
+
+    ## License
+    The **KEYSTONE API Standard** OpenAPI Specification is licensed under the [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
+    ## Contact
+    For inquiries, technical support, or feedback, contact the AETHON Engineering team at info@aethon.gr.
+
+tags:
+  - name: Transport Operation
+    description: Information about transport operation.
+  - name: Vehicle
+    description: Information about vehicle.
+  - name: Driver
+    description: Information about driver.
+
+paths:
+# Transport Operation
+  /transport-operations/:
+    post:
+      tags:
+        - Transport Operation
+      operationId: addTransportOperation
+      summary: Create new transport operation data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransportOperation'
+      responses:
+        '201':
+          description: Transport operation data created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransportOperation'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+    get:
+      tags:
+        - Transport Operation
+      summary: Get all ongoing transport operation data
+      operationId: getTransportOperation
+      responses:
+        '200':
+          description: Transport operation data retrieved successfully  
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransportOperation'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Transport operation data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /transport-operations/{transportOperationId}/:
+    get:
+      tags:
+        - Transport Operation
+      summary: Get a specific transport operation data by ID
+      operationId: getTransportOperationById
+      parameters:
+        - name: transportOperationId
+          description: Unique identifier for the transport operation.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Transport operation data retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransportOperation'
+        '400':
+          description: Invalid transport ID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid transport ID"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Transport operation data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+    put:
+      tags:
+        - Transport Operation
+      summary: Update data for a specific transport operation by ID
+      operationId: updateTransportOperationById
+      parameters:
+        - name: transportOperationId
+          description: Unique identifier for the transport operation.
+          in: path
+          required: true 
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransportOperation'
+      responses:
+        '200':
+          description: Transport operation data updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransportOperation'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Transport operation data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+    delete:
+      tags:
+        - Transport Operation
+      summary: Delete specific transport operation data by ID
+      operationId: deleteTransportOperationById
+      parameters:
+        - name: transportOperationId
+          description: Unique identifier for the transport operation.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Transport operation data deleted successfully
+          content: {}
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Transport operation data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /transport-operations/{transportOperationId}/schedules/:
+    get:
+      tags:
+        - Transport Operation
+      summary: Get schedule data related to a specific transport operation by ID
+      operationId: getScheduleByTransportOperationId
+      parameters:
+        - name: transportOperationId
+          description: Unique identifier for the transport operation.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Schedule data retrieved successfully 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Schedule data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+    put:
+      tags:
+        - Transport Operation
+      summary: Update schedule data for a specific transport operation by ID
+      operationId: updateScheduleByTransportOperationId
+      parameters:
+        - name: transportOperationId
+          description: Unique identifier for the transport operation.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+      responses:
+        '200':
+          description: Schedule data updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Schedule data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /transport-operations/{transportOperationId}/phases/:
+    get:
+      tags:
+        - Transport Operation
+      summary: Get all phase data related to a specific transport operation by ID
+      operationId: getPhaseByTransportOperationId
+      parameters:
+        - name: transportOperationId
+          description: Unique identifier for the transport operation.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Phase data retrieved successfully 
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Phase'
+                example:
+                  - id: 1
+                    location:
+                      id: 54546546
+                      description: "Warehouse A"
+                      coordinates:
+                        latitude: 45.4642
+                        longitude: 9.1900
+                      mode: "GATE"
+                    dateTime: "2023-06-25T10:00:00Z"
+                    state: "IN_PROGRESS"
+                  - id: 2
+                    location:
+                      id: 54546546
+                      description: "Warehouse A"
+                      coordinates:
+                        latitude: 48.8566
+                        longitude: 2.3522
+                      mode: "GATE"
+                    dateTime: "2023-06-25T12:00:00Z"
+                    state: "IN_PROGRESS"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Phase data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+    patch:
+      tags:
+        - Transport Operation
+      summary: Append phase data for a specific transport operation by ID
+      operationId: appendPhaseByTransportOperationId
+      parameters:
+        - name: transportOperationId
+          description: Unique identifier for the transport operation.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Phase'
+      responses:
+        '200':
+          description: Phase data appended successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Phase'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Phase data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /transport-operations/{transportOperationId}/phases/{phaseId}:
+    get:
+      tags:
+        - Transport Operation
+      summary: Get specific phase data by transport operation ID and phase ID
+      operationId: getPhaseByTransportOperationIdAndPhaseId
+      parameters:
+        - name: transportOperationId
+          description: Unique identifier for the transport operation.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: phaseId
+          description: Unique identifier for the phase.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Phase data retrieved successfully 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Phase'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Phase data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+    put:
+      tags:
+        - Transport Operation
+      summary: Update specific phase data by transport operation ID and phase ID
+      operationId: updatePhaseByTransportOperationIdAndPhaseId
+      parameters:
+        - name: transportOperationId
+          description: Unique identifier for the transport operation.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: phaseId
+          description: Unique identifier for the phase.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Phase'
+      responses:
+        '200':
+          description: Phase data updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Phase'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Phase data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /transport-operations/{transportOperationId}/documents/:
+    get:
+      tags:
+        - Transport Operation
+      summary: Get all international consignment notes related to a specific transport operation by ID
+      operationId: getDocumentByTransportOperationId
+      parameters:
+        - name: transportOperationId
+          description: Unique identifier for the transport operation.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Document data retrieved successfully 
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Document'
+                example: 
+                  - referenceCode: "DOC123456"
+                    senderOrganization: "Sender Org"
+                    receiverOrganization: "Receiver Org"
+                    startingPoint:
+                      id: 54546546
+                      description: "Warehouse A"
+                      coordinates:
+                        latitude: 45.4642
+                        longitude: 9.1900
+                      mode: "GATE"
+                    endingPoint:
+                      id: 22252535
+                      description: "Warehouse B"
+                      coordinates:
+                        latitude: 48.8566
+                        longitude: 2.3522
+                      mode: "TERMINAL"
+                    load:
+                      type: "Goods"
+                      description: "Electronics"
+                      weight: 1000
+                      umWeight: "kg"
+                      component:
+                        - type: "Box"
+                          description: "Electronics Box"
+                          width: 50
+                          height: 50
+                          depth: 50
+                          unitary: false
+                          um: "cm"
+                        - type: "Pallet"
+                          description: "Pallet of Electronics"
+                          width: 50
+                          height: 50
+                          depth: 50
+                          unitary: false
+                          um: "cm"
+                    report: "report.pdf"
+                  - referenceCode: "DOC654321"
+                    senderOrganization: "Sender Org 2"
+                    receiverOrganization: "Receiver Org 2"
+                    startingPoint:
+                      id: 54546546
+                      description: "Warehouse C"
+                      coordinates:
+                        latitude: 40.7128
+                        longitude: -74.0060
+                      mode: "GATE"
+                    endingPoint:
+                      id: 22252535
+                      description: "Warehouse D"
+                      coordinates:
+                        latitude: 34.0522
+                        longitude: -118.2437
+                      mode: "TERMINAL"
+                    load:
+                      type: "Goods"
+                      description: "Furniture"
+                      weight: 2000
+                      umWeight: "kg"
+                      component:
+                        - type: "Box"
+                          description: "Furniture Box"
+                          width: 100
+                          height: 100
+                          depth: 100
+                          unitary: false
+                          um: "cm"
+                    report: "report_2.pdf"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Document data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+    patch:
+      tags:
+        - Transport Operation
+      summary: Append international consignment notes data for a specific transport operation by ID
+      operationId: appendDocumentByTransportOperationId
+      parameters:
+        - name: transportOperationId
+          description: Unique identifier for the transport operation.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Document'
+      responses:
+        '200':
+          description: Document data appended successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Tansport operation data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /transport-operations/{transportOperationId}/documents/{referenceCode}/:
+    get: 
+      tags:
+        - Transport Operation
+      summary: Get specific international consignment notes data by transport operation ID and reference code
+      operationId: getDocumentByTransportOperationIdAndReferenceCode
+      parameters:
+        - name: transportOperationId
+          description: Unique identifier for the transport operation.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: referenceCode
+          description: Reference code of the document.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{1,20}$"
+      responses:
+        '200':
+          description: Document data retrieved successfully 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Document data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+    put:
+      tags:
+        - Transport Operation
+      summary: Update specific international consignment notes data by transport operation ID and reference code
+      operationId: updateDocumentByTransportOperationIdAndReferenceCode
+      parameters:
+        - name: transportOperationId
+          description: Unique identifier for the transport operation.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: referenceCode
+          description: Reference code of the document.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{1,20}$"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Document'
+      responses:
+        '200':
+          description: Document data updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Document data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+    delete:
+      tags:
+        - Transport Operation
+      summary: Delete specific international consignment notes data by transport operation ID and reference code
+      operationId: deleteDocumentByTransportOperationIdAndReferenceCode
+      parameters:
+        - name: transportOperationId
+          description: Unique identifier for the transport operation.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: referenceCode
+          description: Reference code of the document.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{1,20}$"
+      responses:
+        '204':
+          description: Document data deleted successfully
+          content: {}
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Document data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"           
+
+  /transport-operations/{countryCode}/{plateNumber}/:
+    get:
+      tags:
+        - Transport Operation
+      summary: Get ongoing transport operation data by country code and license plate number
+      operationId: getTransportOperationByPlateNumber
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: plateNumber
+          description: License plate number of the vehicle.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{1,20}$"
+      responses:
+        '200':
+          description: Transport operation data retrieved successfully 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransportOperation'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Transport operation data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /transport-operations/{countryCode}/{plateNumber}/schedules/:
+    get:
+      tags:
+        - Transport Operation
+      summary: Get details about the schedule of the ongoing transport operation by country code and license plate number
+      operationId: getScheduleByPlateNumber
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: plateNumber
+          description: License plate number of the vehicle.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{1,20}$"
+      responses:
+        '200':
+          description: Schedule data retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "No schedule data found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /transport-operations/{countryCode}/{plateNumber}/phases/:
+    get:
+      tags:
+        - Transport Operation
+      summary: Get details about all the phases of the ongoing transport operation by country code and license plate number
+      operationId: getPhaseByPlateNumber
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: plateNumber
+          description: License plate number of the vehicle.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{1,20}$"
+      responses:
+        '200':
+          description: Phase data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Phase'
+                example:
+                  - id: 1
+                    location:
+                      id: 54546546
+                      description: "Warehouse A"
+                      coordinates:
+                        latitude: 45.4642
+                        longitude: 9.1900
+                      mode: "GATE"
+                    dateTime: "2023-06-25T10:00:00Z"
+                    state: "IN_PROGRESS"
+                  - id: 2
+                    location:
+                      id: 44546544
+                      description: "Warehouse A"
+                      coordinates:
+                        latitude: 48.8566
+                        longitude: 2.3522
+                      mode: "GATE"
+                    dateTime: "2023-06-25T12:00:00Z"
+                    state: "IN_PROGRESS"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Phase data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /transport-operations/{countryCode}/{plateNumber}/phases/{phaseId}:
+    get:
+      tags:
+        - Transport Operation
+      summary: Get specific phase data related to the ongoing transport operation by country code, license plate number, and phase ID
+      operationId: getPhaseByPlateNumberAndPhaseId
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: plateNumber
+          description: License plate number of the vehicle.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{1,20}$"
+        - name: phaseId
+          description: Unique identifier for the phase.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Phase data retrieved successfully 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Phase'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Phase data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /transport-operations/{countryCode}/{plateNumber}/documents/:
+    get:
+      tags:
+        - Transport Operation
+      summary: Get all international consignment notes related to the ongoing transport operation by country code and license plate number
+      operationId: getDocumentByPlateNumber
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: plateNumber
+          description: License plate number of the vehicle.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{1,20}$"
+      responses:
+        '200':
+          description: Document data retrieved successfully 
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Document'
+                example:
+                  - referenceCode: "DOC123456"
+                    senderOrganization: "Sender Org"
+                    receiverOrganization: "Receiver Org"
+                    startingPoint:
+                      id: 54546546
+                      description: "Warehouse A"
+                      coordinates:
+                        latitude: 45.4642
+                        longitude: 9.1900
+                      mode: "GATE"
+                    endingPoint:
+                      id: 22252535
+                      description: "Warehouse B"
+                      coordinates:
+                        latitude: 48.8566
+                        longitude: 2.3522
+                      mode: "TERMINAL"
+                    load:
+                      type: "Goods"
+                      description: "Electronics"
+                      weight: 1000
+                      umWeight: "kg"
+                      component:
+                        - type: "Box"
+                          description: "Electronics Box"
+                          width: 50
+                          height: 50
+                          depth: 50
+                          unitary: false
+                          um: "cm"
+                        - type: "Pallet"
+                          description: "Pallet of Electronics"
+                          width: 50
+                          height: 50
+                          depth: 50
+                          unitary: false
+                          um: "cm"
+                    report: "report.pdf"
+                  - referenceCode: "DOC654321"
+                    senderOrganization: "Sender Org 2"
+                    receiverOrganization: "Receiver Org 2"
+                    startingPoint:
+                      id: 45355554
+                      description: "Warehouse C"
+                      coordinates:
+                        latitude: 40.7128
+                        longitude: -74.0060
+                      mode: "GATE"
+                    endingPoint:
+                      id: 49252535
+                      description: "Warehouse D"
+                      coordinates:
+                        latitude: 34.0522
+                        longitude: -118.2437
+                      mode: "TERMINAL"
+                    load:
+                      type: "Goods"
+                      description: "Furniture"
+                      weight: 2000
+                      umWeight: "kg"
+                      component:
+                        - type: "Box"
+                          description: "Furniture Box"
+                          width: 100
+                          height: 100
+                          depth: 100
+                          unitary: false
+                          um: "cm"
+                    report: "report_2.pdf" 
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Document data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /transport-operations/{countryCode}/{plateNumber}/documents/{referenceCode}/:
+    get:
+      tags:
+        - Transport Operation
+      summary: Get specific international consignment notes data related to the ongoing transport operation by country code, license plate number, and reference code
+      operationId: getDocumentByPlateNumberAndReferenceCode
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: plateNumber
+          description: License plate number of the vehicle.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{1,20}$"
+        - name: referenceCode
+          description: Reference code of the document.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{1,20}$"
+      responses:
+        '200':
+          description: Document data retrieved successfully 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Document data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /transport-operations/locations/:
+    get:
+      tags:
+        - Transport Operation
+      summary: Get all locations related to transport operations
+      operationId: getLocation
+      responses:
+        '200':
+          description: Location data retrieved successfully 
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Location'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Location data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /transport-operations/locations/{mode}/:
+    get:
+      tags:
+        - Transport Operation
+      summary: Get all locations related to transport operations by location mode
+      operationId: getLocationByMode
+      parameters:
+        - name: mode
+          description: Mode of location
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Mode'
+      responses:
+        '200':
+          description: Location data retrieved successfully 
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Location'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Location data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+# Vehicle
+  /vehicles/:
+    post:
+      tags:
+        - Vehicle
+      operationId: addVehicle
+      summary: Create new vehicle data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Vehicle'
+            example:
+              id: 5151611656125
+              countryCode: "IT"
+              plateNumber: "AA1232"
+              type: "Truck"
+              model: "Model X"
+              geolocation:
+              - dateTime: "2023-06-25T10:00:00Z"
+                coordinates:
+                  latitude: 44.43280249569422
+                  longitude: 8.96079325815954
+              - dateTime: "2023-06-25T10:00:05Z"
+                coordinates:
+                  latitude: 44.43333558887465
+                  longitude: 8.959854986839684
+              owner:
+                id: 566554511871
+                name: "Acme Trucking"
+                vat: "IT2345678901"
+              insurance:
+                - id: 778554845525
+                  name: "AB Insurance"
+                  number: "KST-123456789"
+                  isInsured: true
+                  activationDate: "2023-01-15"
+                  expirationDate: "2024-01-14"
+              revision:
+                - id: 002232355445
+                  name: "Revision Comp"
+                  number: "A-2211"
+                  executionDate: "2023-01-15"
+                  expirationDate: "2024-01-14"
+      responses:
+        '201':
+          description: Vehicle data created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vehicle'
+              example:
+                id: 5151611656125
+                countryCode: "IT"
+                plateNumber: "AA1232"
+                type: "Truck"
+                model: "Model X"
+                geolocation:
+                - dateTime: "2023-06-25T10:00:00Z"
+                  coordinates:
+                    latitude: 44.43280249569422
+                    longitude: 8.96079325815954
+                - dateTime: "2023-06-25T10:00:05Z"
+                  coordinates:
+                    latitude: 44.43333558887465
+                    longitude: 8.959854986839684
+                owner:
+                  id: 566554511871
+                  name: "Acme Trucking"
+                  vat: "IT2345678901"
+                insurance:
+                  - id: 778554845525
+                    name: "AB Insurance"
+                    number: "KST-123456789"
+                    isInsured: true
+                    activationDate: "2023-01-15"
+                    expirationDate: "2024-01-14"
+                revision:
+                  - id: 002232355445
+                    name: "Revision Comp"
+                    number: "A-2211"
+                    executionDate: "2023-01-15"
+                    expirationDate: "2024-01-14"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+    get:
+      tags:
+        - Vehicle
+      summary: Get all vehicle data
+      operationId: getVehicle
+      responses:
+        '200':
+          description: Vehicle data retrieved successfully 
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vehicle'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Vehicle data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /vehicles/{countryCode}/{plateNumber}/:
+    get:
+      tags:
+        - Vehicle
+      summary: Get vehicle data by country code and license plate number
+      operationId: getVehicleByPlateNumber
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: plateNumber
+          description: License plate number of the vehicle.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{1,20}$"
+      responses:
+        '200':
+          description: Vehicle data retrieved successfully 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vehicle'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Vehicle data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+    put:
+      tags:
+        - Vehicle
+      summary: Update vehicle data by country code and license plate number
+      operationId: updateVehicleByPlateNumber
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: plateNumber
+          description: License plate number of the vehicle.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{1,20}$"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Vehicle'
+            example:
+              id: 5151611656125
+              countryCode: "IT"
+              plateNumber: "AA1232"
+              type: "Truck"
+              model: "Model X"
+              geolocation:
+                - dateTime: "2023-06-25T10:00:00Z"
+                  coordinates:
+                    latitude: 44.43280249569422
+                    longitude: 8.96079325815954
+                - dateTime: "2023-06-25T10:00:05Z"
+                  coordinates:
+                    latitude: 44.43333558887465
+                    longitude: 8.959854986839684
+              owner:
+                id: 566554511871
+                name: "Acme Trucking"
+                vat: "IT2345678901"
+              insurance:
+                - id: 778554845525
+                  name: "AB Insurance"
+                  number: "KST-123456789"
+                  isInsured: true
+                  activationDate: "2023-01-15"
+                  expirationDate: "2024-01-14"
+              revision:
+                - id: 002232355445
+                  name: "Revision Comp"
+                  number: "A-2211"
+                  executionDate: "2023-01-15"
+                  expirationDate: "2024-01-14"
+      responses:
+        '200':
+          description: Vehicle data updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vehicle'
+              example:
+                id: 5151611656125
+                countryCode: "IT"
+                plateNumber: "AA1232"
+                type: "Truck"
+                model: "Model X"
+                geolocation:
+                  - dateTime: "2023-06-25T10:00:00Z"
+                    coordinates:
+                      latitude: 44.43280249569422
+                      longitude: 8.96079325815954
+                  - dateTime: "2023-06-25T10:00:05Z"
+                    coordinates:
+                      latitude: 44.43333558887465
+                      longitude: 8.959854986839684
+                owner:
+                  id: 566554511871
+                  name: "Acme Trucking"
+                  vat: "IT2345678901"
+                insurance:
+                  - id: 778554845525
+                    name: "AB Insurance"
+                    number: "KST-123456789"
+                    isInsured: true
+                    activationDate: "2023-01-15"
+                    expirationDate: "2024-01-14"
+                revision:
+                  - id: 002232355445
+                    name: "Revision Comp"
+                    number: "A-2211"
+                    executionDate: "2023-01-15"
+                    expirationDate: "2024-01-14"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Vehicle data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+    delete:
+      tags:
+        - Vehicle
+      summary: Delete specific vehicle data by country code and license plate number
+      operationId: deleteVehicleByPlateNumber
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: plateNumber
+          description: License plate number of the vehicle.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{1,20}$"
+      responses:
+        '204':
+          description: Vehicle data deleted successfully
+          content: {}
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Vehicle data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /vehicles/{countryCode}/{plateNumber}/geolocations/:
+    get:
+      tags:
+        - Vehicle
+      summary: Get details about the geolocation of vehicle by country code and license plate number
+      operationId: getGeolocationByPlateNumber
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: plateNumber
+          description: License plate number of the vehicle.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{1,20}$"
+      responses:
+        '200':
+          description: Geolocation data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Geolocation'
+                example:
+                - dateTime: "2023-06-25T10:00:00Z"
+                  coordinates:
+                    latitude: 44.43280249569422
+                    longitude: 8.96079325815954
+                - dateTime: "2023-06-25T10:00:05Z"
+                  coordinates:
+                    latitude: 44.43333558887465
+                    longitude: 8.959854986839684
+                - dateTime: "2023-06-25T10:00:10Z"
+                  coordinates:
+                    latitude: 44.43420688779947
+                    longitude: 8.958240077553329
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Geolocation data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+    patch:
+      tags:
+        - Vehicle
+      summary: Append new vehicle's geolocation data by country code and license plate number
+      operationId: appendGeolocationByPlateNumber
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: plateNumber
+          description: License plate number of the vehicle.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{1,20}$"
+      requestBody:
+        required: true
+        content:
+          application/json:
+              schema:
+                $ref: '#/components/schemas/Geolocation'
+              example:
+                dateTime: "2023-06-25T10:00:10Z"
+                coordinates:
+                  latitude: 44.43420688779947
+                  longitude: 8.958240077553329
+      responses:
+        '200':
+          description: Geolocation data appended successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Geolocation'
+                example:
+                  dateTime: "2023-06-25T10:00:10Z"
+                  coordinates:
+                    latitude: 44.43420688779947
+                    longitude: 8.958240077553329
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Vehicle data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /vehicles/{countryCode}/{plateNumber}/owners/:
+    get:
+      tags:
+        - Vehicle
+      summary: Get details about the owner of vehicle by country code and license plate number
+      operationId: getOwnerByPlateNumber
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: plateNumber
+          description: License plate number of the vehicle.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{1,20}$"
+      responses:
+        '200':
+          description: Owner data retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Owner data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /vehicles/{countryCode}/{plateNumber}/insurances/:
+    get:
+      tags:
+        - Vehicle
+      summary: Get details about the insurances of vehicle by country code and license plate number
+      operationId: getAllInsuranceByPlateNumber
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: plateNumber
+          description: License plate number of the vehicle.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{1,20}$"
+      responses:
+        '200':
+          description: Insurance data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Insurance'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Insurance data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /vehicles/{countryCode}/{plateNumber}/insurances/{insuranceId}/:
+    get:
+      tags:
+        - Vehicle
+      summary: Get details about the insurance of vehicle by country code, license plate number and insurance id
+      operationId: getInsuranceByPlateNumberAndInsuranceId
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: plateNumber
+          description: License plate number of the vehicle.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{1,20}$"
+        - name: insuranceId
+          description: Insurance ID of the vehicle.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Insurance data retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Insurance'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Insurance data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /vehicles/{countryCode}/{plateNumber}/revisions/:
+    get:
+      tags:
+        - Vehicle
+      summary: Get details about the revisions of vehicle by country code and license plate number
+      operationId: getAllRevisionByPlateNumber
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: plateNumber
+          description: License plate number of the vehicle.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{1,20}$"
+      responses:
+        '200':
+          description: Revision data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Revision'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Revision data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /vehicles/{countryCode}/{plateNumber}/revisions/{revisionId}/:
+    get:
+      tags:
+        - Vehicle
+      summary: Get details about the revision of vehicle by country code, license plate number and revision id
+      operationId: getRevisionByPlateNumberAndRevisionId
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: plateNumber
+          description: License plate number of the vehicle.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{1,20}$"
+        - name: revisionId
+          description: Revision ID of the vehicle.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+          '200':
+            description: Revision data retrieved successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Revision'
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: string
+                      example: "Invalid input data"
+          '404':
+            description: Not found
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: string
+                      example: "Revision data not found"
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: string
+                      example: "Unexpected server error"
+
+# Driver
+  /drivers/:
+    post:
+      tags:
+        - Driver
+      operationId: addDriver
+      summary: Create new driver data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Driver'
+            example:
+              id: 1515665415
+              firstName: "John"
+              lastName: "Doe"
+              countryCode: "IT"
+              vat: "IT0011228901"
+              license:
+                id: "IT1234567890"
+                countryCode: "IT"
+                category:
+                  - type: "C"
+                    issueDate: "2020-01-01"
+                    expiryDate: "2025-12-31"
+                    status: "VALID"
+                    code95: "95 (13.02.25)"
+              trafficViolation:
+                - id: 9998871454
+                  code: "SV-123"
+                  countryCode: "IT"
+                  fine: 150.00
+                  paymentDueDate: "2023-07-15"
+                  paymentDate: "2023-07-10"
+                  isPaid: true
+                  validityPoints: 1
+              tachographCard:
+                - id: "IT1234567890123456"
+                  drivingInterval:
+                    - startDateTime: "2023-06-20T08:00:00Z"
+                      endDateTime: "2023-06-20T18:00:00Z"
+                      etl:
+                        - type: "Daily driving limit"
+                          hours: 1
+                          minutes: 30
+                          seconds: 0
+      responses:
+        '201':
+          description: Driver data created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+              example:
+                id: 1515665415
+                firstName: "John"
+                lastName: "Doe"
+                countryCode: "IT"
+                vat: "IT0011228901"
+                license:
+                  id: "IT1234567890"
+                  countryCode: "IT"
+                  category:
+                    - type: "C"
+                      issueDate: "2020-01-01"
+                      expiryDate: "2025-12-31"
+                      status: "VALID"
+                      code95: "95 (13.02.25)"
+                trafficViolation:
+                  - id: 9998871454
+                    code: "SV-123"
+                    countryCode: "IT"
+                    fine: 150.00
+                    paymentDueDate: "2023-07-15"
+                    paymentDate: "2023-07-10"
+                    isPaid: true
+                    validityPoints: 1
+                tachographCard:
+                  - id: "IT1234567890123456"
+                    drivingInterval:
+                      - startDateTime: "2023-06-20T08:00:00Z"
+                        endDateTime: "2023-06-20T18:00:00Z"
+                        etl:
+                          - type: "Daily driving limit"
+                            hours: 1
+                            minutes: 30
+                            seconds: 0
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+    get:
+      tags:
+        - Driver
+      summary: Get all driver data
+      operationId: getDriver
+      responses:
+        '200':
+          description: Driver data retrieved successfully 
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Driver'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Driver data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /drivers/{countryCode}/{vat}/:
+    get:
+      tags:
+        - Driver
+      summary: Get driver data by country code and vat number
+      operationId: getDriverByVat
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: vat
+          description: Vat number of the driver.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{2,13}$"
+      responses:
+        '200':
+          description: Driver data retrieved successfully 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Driver data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+    put:
+      tags:
+        - Driver
+      summary: Update driver data by country code and vat number
+      operationId: updateDriverByVat
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: vat
+          description: Vat number of the driver.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{2,13}$"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Driver'
+            example:
+              id: 1515665415
+              firstName: "John"
+              lastName: "Doe"
+              countryCode: "IT"
+              vat: "IT0011228901"
+              license:
+                id: "IT1234567890"
+                countryCode: "IT"
+                category:
+                  - type: "C"
+                    issueDate: "2020-01-01"
+                    expiryDate: "2025-12-31"
+                    status: "VALID"
+                    code95: "95 (13.02.25)"
+              trafficViolation:
+                - id: 9998871454
+                  description: "Speeding"
+                  code: "SV-123"
+                  countryCode: "IT"
+                  fine: 150.00
+                  paymentDueDate: "2023-07-15"
+                  paymentDate: "2023-07-10"
+                  isPaid: true
+                  validityPoints: 1
+              tachographCard:
+                - id: "IT1234567890123456"
+                  drivingInterval:
+                    - startDateTime: "2023-06-20T08:00:00Z"
+                      endDateTime: "2023-06-20T23:00:00Z"
+                      etl:
+                        - type: "Daily driving limit"
+                          hours: 1
+                          minutes: 30
+                          seconds: 0
+                        - type: "Rest period"
+                          hours: 9
+                          minutes: 0
+                          seconds: 0
+      responses:
+        '200':
+          description: Driver data updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+              example:
+                id: 1515665415
+                firstName: "John"
+                lastName: "Doe"
+                countryCode: "IT"
+                vat: "IT0011228901"
+                license:
+                  id: "IT1234567890"
+                  countryCode: "IT"
+                  category:
+                    - type: "C"
+                      issueDate: "2020-01-01"
+                      expiryDate: "2025-12-31"
+                      status: "VALID"
+                      code95: "95 (13.02.25)"
+                trafficViolation:
+                  - id: 9998871454
+                    description: "Speeding"
+                    code: "SV-123"
+                    countryCode: "IT"
+                    fine: 150.00
+                    paymentDueDate: "2023-07-15"
+                    paymentDate: "2023-07-10"
+                    isPaid: true
+                    validityPoints: 1
+                tachographCard:
+                  - id: "IT1234567890123456"
+                    drivingInterval:
+                      - startDateTime: "2023-06-20T08:00:00Z"
+                        endDateTime: "2023-06-20T23:00:00Z"
+                        etl:
+                          - type: "Daily driving limit"
+                            hours: 1
+                            minutes: 30
+                            seconds: 0
+                          - type: "Rest period"
+                            hours: 9
+                            minutes: 0
+                            seconds: 0
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Driver data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+    delete:
+      tags:
+        - Driver
+      summary: Delete specific driver data
+      operationId: deleteDriverByVat
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: vat
+          description: Vat number of the driver.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{2,13}$"
+      responses:
+        '204':
+          description: Driver data deleted successfully
+          content: {}
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Driver data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /drivers/{countryCode}/{vat}/licenses/:
+    get:
+      tags:
+        - Driver
+      summary: Get details about the driver's license by country code and vat number
+      operationId: getLicenseByVat
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: vat
+          description: Vat number of the driver.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{2,13}$"
+      responses:
+        '200':
+          description: License data retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/License'
+              example:
+                id: "IT1234567890"
+                countryCode: "IT"
+                category:
+                  - type: "B"
+                    issueDate: "2015-01-01"
+                    expiryDate: "2025-12-31"
+                    status: "VALID"
+                  - type: "C"
+                    issueDate: "2020-01-01"
+                    expiryDate: "2025-12-31"
+                    status: "VALID"
+                    code95: "95 (13.02.25)"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "License data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /drivers/{countryCode}/{vat}/traffic-violations/:
+    get:
+      tags:
+        - Driver
+      summary: Get details about the driver's traffic violations by country code and vat number
+      operationId: getAllTrafficViolationByVat
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: vat
+          description: Vat number of the driver.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{2,13}$"
+      responses:
+        '200':
+          description: Driver's traffic violation data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TrafficViolation'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Driver's traffic violation data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /drivers/{countryCode}/{vat}/traffic-violations/{trafficViolationId}/:
+    get:
+      tags:
+        - Driver
+      summary: Get specific driver's traffic violation data by country code, vat number and traffic violation id
+      operationId: getTrafficViolationByVatAndTrafficViolationId
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: vat
+          description: Vat number of the driver.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{2,13}$"
+        - name: trafficViolationId
+          description: Traffic violation id of the driver.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:  
+          '200':
+            description: Driver's traffic violation data retrieved successfully 
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/TrafficViolation'
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: string
+                      example: "Invalid input data"
+          '404':
+            description: Not found
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: string
+                      example: "Driver's traffic violation data not found"
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: string
+                      example: "Unexpected server error"
+
+  /drivers/{countryCode}/{vat}/tachograph-cards/:
+    get:
+      tags:
+        - Driver
+      summary: Get details about the driver's tachograph cards data by country code and vat number
+      operationId: getAllTachographCardByVat
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: vat
+          description: Vat number of the driver.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{2,13}$"
+      responses:
+        '200':
+          description: Tachograph card data retrieved successfully 
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TachographCard'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Tachograph card data not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /drivers/{countryCode}/{vat}/tachograph-cards/{tachographCardId}/:
+    get:
+      tags:
+        - Driver
+      summary: Get specific driver's tachograph card data by country code, vat number and tachograph card id
+      operationId: getTachographCardByVatAndTachographCardId
+      parameters:
+        - name: countryCode
+          description: Country code of the vehicle's registration.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: vat
+          description: Vat number of the driver.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[\\s\\S]{2,13}$"
+        - name: tachographCardId
+          description: Tachograph card id of the driver.
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z0-9]{1,16}$"
+      responses:
+          '200':
+            description: Tachograph card data retrieved successfully 
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/TachographCard'
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: string
+                      example: "Invalid input data"
+          '404':
+            description: Not found
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: string
+                      example: "Tachograph card data not found"
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: string
+                      example: "Unexpected server error"
+
+components:
+  schemas:
+    TransportOperation:
+      type: object
+      required:
+      - id
+      - operator
+      - schedule
+      - driver
+      - vehicle 
+      - document
+      description: Details about the transport operation.
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier for the transport operation.
+          example: 123456789
+          minimum: 1
+          uniqueItems: true
+        operator:
+          description: Details about the logistic operator that handles the transport operation.
+          $ref: '#/components/schemas/Organization'
+        schedule:
+          $ref: '#/components/schemas/Schedule'
+        driver:
+          $ref: '#/components/schemas/Driver'
+        vehicle:
+          $ref: '#/components/schemas/Vehicle'
+        phase:
+          type: array
+          description: List of the operation phases.
+          items:
+            $ref: '#/components/schemas/Phase'
+        document:
+          type: array
+          description: List of the international consignment notes used for transport operation.
+          items:
+            $ref: '#/components/schemas/Document'
+        payload:
+          $ref: '#/components/schemas/Payload'
+
+    Document:
+      type: object
+      required:
+      - referenceCode
+      - senderOrganization
+      - receiverOrganization
+      - startingPoint
+      - endingPoint
+      - load
+      description: Details about the international consignment notes used for transport operation.
+      additionalProperties: false
+      properties:
+        referenceCode:
+          type: string
+          description: Unique identifier assigned to international consignment note used for transport operation.
+          example: "DOC-123456789"
+          pattern: "^[\\s\\S]{1,20}$"
+        senderOrganization:
+          description: Details about the organization that sends the load.
+          $ref: '#/components/schemas/Organization'
+        receiverOrganization:
+          description: Details about the organization that receives the load.
+          $ref: '#/components/schemas/Organization'
+        startingPoint:
+          description: Details about the starting point of the transport operation.
+          $ref: '#/components/schemas/Location'
+        endingPoint:
+          description: Details about the ending point of the transport operation.
+          $ref: '#/components/schemas/Location'
+        load:
+          $ref: '#/components/schemas/Load'
+        report:
+          type: string
+          format: file
+          description: Proof of transport and delivery terms, along with customs and insurance documentation for cross-border shipments. Must be a PDF file.
+          example: "report.pdf"
+        payload:
+          $ref: '#/components/schemas/Payload'
+
+    Organization:
+      type: object
+      required:
+        - name
+        - countryCode
+      description: Details about the organization.
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          description: Name of the organization.
+          example: "ABC Logistics"
+          pattern: "^[\\s\\S]{1,20}$"
+        countryCode:
+          type: string
+          description: Country code of the organization.
+          example: "IT" 
+          pattern: "^[A-Z]{2,4}$"
+        vat:
+          type: string
+          description: VAT Number of the organization.
+          example: "IT1234567890" 
+          pattern: "^[\\s\\S]{2,13}$"
+        address:
+          type: string
+          description: Address of the organization.
+          example: "123 Main St, City, Country"
+          pattern: "^[\\s\\S]{1,100}$"
+
+    Location:
+      type: object
+      required:
+      - id
+      - description
+      - mode
+      description: Details about the location.
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier for the location.
+          example: 123456789
+          minimum: 1
+          uniqueItems: true
+        description:
+          type: string
+          description: Description about the location.
+          example: "Place X"
+          pattern: "^[\\s\\S]{1,100}$"
+        mode:
+          $ref: '#/components/schemas/Mode'
+        coordinates:
+          $ref: '#/components/schemas/Coordinates'
+
+    Mode:
+      type: string
+      description: Details about the mode of the location.
+      enum:
+        - GENERIC
+        - GATE
+        - TERMINAL
+        - PORT
+        - AIRPORT
+        - STATION
+      example: "GENERIC"
+
+    Coordinates:
+      type: object
+      required:
+        - latitude
+        - longitude
+      description: Details about the coordinates.
+      additionalProperties: false
+      properties:
+        latitude:
+          type: number
+          format: double
+          description: Latitude in Decimal Degrees (DD).
+          example: 34.052235
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          format: double
+          description: Longitude in Decimal Degrees (DD).
+          example: -118.243683
+          minimum: -180
+          maximum: 180
+
+    Load:
+      type: object
+      description: Details about the load being transported.
+      required:
+      - type
+      - weight
+      - umWeight
+      - component
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+          description: Type of load being transported.
+          example: "Electronics"
+          pattern: "^[\\s\\S]{1,20}$"
+        description:
+          type: string
+          description: Detailed description of the load.
+          example: "Laptops, tablets, and smartphones"
+          pattern: "^[\\s\\S]{1,100}$"
+        weight:
+          type: number
+          format: double
+          description: Weight of the load in kilograms.
+          example: 500
+          minimum: 0
+        umWeight:
+          type: string
+          description: Unit of measurement for the weight of the load.
+          example: "kg"
+          pattern: "^[\\s\\S]{1,20}$"
+        component:
+          type: array
+          description: List of the components of the load.
+          items:
+            $ref: '#/components/schemas/Component'
+
+    Component:
+      type: object
+      description: Details about the component of the load.
+      required:
+      - type
+      - width
+      - height
+      - depth
+      - unitary
+      - um
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+          description: Type of the component.
+          example: "Laptop"
+          pattern: "^[\\s\\S]{1,20}$"
+        description:
+          type: string
+          description: Detailed description of the component.
+          example: "Brand X Laptop"
+          pattern: "^[\\s\\S]{1,100}$"
+        width:
+          type: number
+          format: double
+          description: Width of the component.
+          example: 30
+          minimum: 0
+        height:
+          type: number
+          format: double
+          description: Height of the component.
+          example: 20
+          minimum: 0
+        depth:
+          type: number
+          format: double
+          description: Depth of the component.
+          example: 5
+          minimum: 0
+        unitary:
+          type: boolean
+          description: Indicates if the component is unitary.
+          example: true
+        um:
+          type: string
+          description: Unit of measurement for the component.
+          example: "cm"
+          pattern: "^[\\s\\S]{1,20}$"
+
+    Phase:
+      type: object
+      description: Details about the operation phase.
+      required:
+      - id
+      - location
+      - dateTime
+      - state
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: The indicator of the respective operation phase.
+          example: 1
+          minimum: 1
+        location:
+          $ref: '#/components/schemas/Location'
+        dateTime:
+          type: string
+          format: date-time
+          description: Date and time of the respective operation phase.
+          example: "2023-06-25T10:00:00Z" 
+          pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        state:
+          $ref: '#/components/schemas/State' 
+        payload:
+          $ref: '#/components/schemas/Payload'
+
+    State:
+      type: string
+      description: Details about the state of the operation phase.
+      enum:
+        - PLANNING
+        - IN_PROGRESS
+        - ARRIVED_AT_PICKUP
+        - ARRIVED_AT_DESTINATION
+        - LOADING
+        - UNLOADING
+        - IN_TRANSIT
+        - COMPLETED
+        - DELAYED
+        - CANCELED
+      example: "IN_TRANSIT"
+
+    Schedule:
+      type: object
+      required:
+        - departureDateTime
+        - estimatedDateTimeOfArrival
+      description: Details about the date and time of transport operation.
+      additionalProperties: false
+      properties:
+        departureDateTime:
+          type: string
+          format: date-time
+          description: Predefined date and time of departure.
+          example: "2023-06-25T10:00:00Z" 
+          pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        realDepartureDateTime:
+          type: string
+          format: date-time
+          description: Real date and time of departure.
+          example: "2023-06-27T10:30:00Z" 
+          pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        estimatedDateTimeOfArrival:
+          type: string
+          format: date-time
+          description: Estimated date and time of arrival.
+          example: "2023-06-27T17:00:00Z"
+          pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        realArrivalDateTime:
+          type: string
+          format: date-time
+          description: Real date and time of arrival.
+          example: "2023-06-27T17:20:00Z"
+          pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+
+    Vehicle:
+      type: object
+      required:
+      - id
+      - countryCode
+      - plateNumber
+      - owner
+      - insurance
+      - revision
+      description: Details about the vehicle used for the operation phase.
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier for the vehicle.
+          example: 123456789
+          minimum: 1
+          uniqueItems: true
+        countryCode:
+          type: string
+          description: Country code of the vehicle's registration.
+          example: "IT" 
+          pattern: "^[A-Z]{2,4}$"
+        plateNumber:
+          type: string
+          description: License plate number of the vehicle.
+          example: "AA1232" 
+          pattern: "^[\\s\\S]{1,20}$"
+        type: 
+          type: string
+          description: Type of the vehicle.
+          example: "Truck"
+          pattern: "^[\\s\\S]{1,20}$"
+        model:
+          type: string
+          description: Model of the vehicle.
+          example: "XX Model"
+          pattern: "^[\\s\\S]{1,20}$"
+        geolocation:
+          type: array
+          items:
+            $ref: '#/components/schemas/Geolocation'
+        owner:
+          $ref: '#/components/schemas/Owner'
+        insurance:
+          type: array
+          description: List of vehicle's insurances.
+          items:
+            $ref: '#/components/schemas/Insurance'
+        revision:
+          type: array
+          description: List of vehicle's revisions.
+          items:
+            $ref: '#/components/schemas/Revision'
+
+    Geolocation:
+      type: object
+      required:
+        - dateTime
+        - coordinates
+      description: Details of the vehicle's geolocation.
+      additionalProperties: false
+      properties:
+        dateTime:
+          type: string
+          format: date-time
+          description: Date and time the vehicle was located at the given coordinates.
+          example: "2023-06-25T10:00:00Z"
+          pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        coordinates:
+          $ref: "#/components/schemas/Coordinates"
+
+    Owner:
+      type: object
+      required:
+      - id
+      - name
+      description: Details of the vehicle owner.
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier for the vehicle.
+          example: 123456789
+          minimum: 1
+          uniqueItems: true
+        name:
+          type: string
+          description: Name of the company owning the vehicle.
+          example: "Acme Trucking" 
+          pattern: "^[\\s\\S]{1,20}$"
+        vat:
+          type: string
+          description: VAT number of the vehicle owning company.
+          example: "IT2345678901" 
+          pattern: "^[\\s\\S]{2,13}$"
+        payload:
+          $ref: '#/components/schemas/Payload'
+
+    Insurance:
+      type: object
+      required: 
+      - id
+      - name
+      - number
+      - isInsured
+      - activationDate
+      - expirationDate
+      description: Details of the insurance.
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier for the insurance of the vehicle.
+          example: 123456789
+          minimum: 1
+          uniqueItems: true
+        name:
+          type: string
+          description: Name of the insurance company.
+          example: "AB Insurance" 
+          pattern: "^[\\s\\S]{1,20}$"
+        number:
+          type: string
+          description: Insurance policy number.
+          example: "KST-123456789" 
+          pattern: "^[\\s\\S]{1,20}$"
+        isInsured:
+          type: boolean
+          description: Indicates whether the vehicle is insured.
+          example: true 
+        activationDate:
+          type: string
+          format: date
+          description: Date when the vehicle insurance became active.
+          example: "2023-01-15" 
+          pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+        expirationDate:
+          type: string
+          format: date
+          description: Expiration date of the vehicle insurance.
+          example: "2024-01-14"  
+          pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+        payload:
+          $ref: '#/components/schemas/Payload'
+
+    Revision:
+      type: object
+      required: 
+      - id
+      - name
+      - number
+      - executionDate
+      - expirationDate
+      description: Details of the revision.
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier for the revision of the vehicle.
+          example: 123456789
+          minimum: 1
+          uniqueItems: true
+        name:
+          type: string
+          description: Name of the revision company.
+          example: "Revision Comp" 
+          pattern: "^[\\s\\S]{1,20}$"
+        number:
+          type: string
+          description: Revision number.
+          example: "A-2211" 
+          pattern: "^[\\s\\S]{1,20}$"
+        executionDate:
+          type: string
+          format: date
+          description: Date when the vehicle revision became execute.
+          example: "2023-01-15" 
+          pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+        expirationDate:
+          type: string
+          format: date
+          description: Expiration date of the vehicle revision.
+          example: "2024-01-14"   
+          pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+        payload:
+          $ref: '#/components/schemas/Payload'
+
+    Driver:
+      type: object
+      required:
+      - id
+      - firstName
+      - lastName
+      - countryCode
+      - vat
+      - license
+      description: Details about the driver used for the operation phase.
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier for the driver.
+          example: 123456789
+          minimum: 1
+          uniqueItems: true
+        firstName:
+          type: string
+          description: First name of the driver.
+          example: "John"
+          pattern: "^[\\s\\S]{1,20}$"
+        lastName:
+          type: string
+          description: Last name of the driver.
+          example: "Doe"
+          pattern: "^[\\s\\S]{1,20}$"
+        countryCode:
+          type: string
+          description: Country code of the driver's registration.
+          example: "IT"
+          pattern: "^[A-Z]{2,4}$"
+        vat:
+          type: string
+          description: VAT number of the driver.
+          example: "IT0011228901" 
+          pattern: "^[\\s\\S]{2,13}$"
+        license:
+          $ref: '#/components/schemas/License'
+        trafficViolation:
+          type: array
+          description: List of drivers's traffic violations.
+          items:
+            $ref: '#/components/schemas/TrafficViolation'
+        tachographCard:
+          type: array
+          description: List of drivers's tachograph cards.
+          items:
+            $ref: '#/components/schemas/TachographCard'
+
+    License:
+      type: object
+      required:
+      - id
+      - countryCode
+      - category
+      description: Details of the driver's license.
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          description: License unique identifier, which could be set as corresponding to the actual EU Licence Number.
+          example: "IT1234567890"
+          pattern: "^[A-Z0-9]{1,16}$"
+          uniqueItems: true
+        countryCode:
+          type: string
+          description: Country code of the driver's license.
+          example: "IT"
+          pattern: "^[A-Z]{2,4}$"
+        category:
+          type: array
+          description: List of diverse license's categories.
+          items:
+            $ref: '#/components/schemas/Category'
+
+    Category:
+      type: object
+      description: Details of the license's category.
+      required:
+      - type
+      - issueDate
+      - expiryDate
+      - status
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+          description: License type.
+          enum:
+          - AM
+          - A
+          - A1
+          - A2
+          - B
+          - BE
+          - B1
+          - C1
+          - C1E
+          - C
+          - CE
+          - D1
+          - D1E
+          - D
+          - DE
+          example: "C"
+        description:
+          type: string
+          description: A description of the vehicle type associated with the license category.
+          example: "Goods Vehicle"
+          pattern: "^[\\s\\S]{1,20}$"
+        issueDate:
+          type: string
+          format: date
+          description: The date when the license was issued.
+          example: "2020-01-01"
+          pattern: '^\d{4}-\d{2}-\d{2}$'
+        expiryDate:
+          type: string
+          format: date
+          description: The date when the license is set to expire.
+          example: "2025-12-31"
+          pattern: '^\d{4}-\d{2}-\d{2}$'
+        status:
+          type: string
+          description: Status of the license.
+          enum:
+          - VALID 
+          - EXPIRED 
+          - SUSPENDED
+          - REVOKED 
+          - CONFISCATED 
+          - LOST/STOLEN
+          example: "VALID"
+        code95:
+          type: string
+          description: Certificate of Professional Competence (CPC) qualification.
+          example: "95 (13.02.25)"
+          pattern: "^[\\s\\S]{1,20}$"
+
+    TrafficViolation:
+      type: object
+      description: Details of the traffic violation associated with the driver.
+      required:
+      - id
+      - code
+      - countryCode
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier for the traffic violation.
+          example: 123456789
+          minimum: 1
+          uniqueItems: true
+        description:
+          type: string
+          description: Description of the traffic violation.
+          example: "Speeding"
+          pattern: "^[\\s\\S]{1,100}$"
+        code:
+          type: string
+          description: Code of the traffic violation.
+          example: "SV-123"
+          pattern: "^[\\s\\S]{1,20}$"
+        countryCode:
+          type: string
+          description: Country code where the traffic violation occurred.
+          example: "IT"
+          pattern: "^[A-Z]{2,4}$"
+        fine:
+          type: number
+          format: double
+          description: Amount of the fine.
+          example: 150.00
+          minimum: 1
+        paymentDueDate:
+          type: string
+          format: date
+          description: Payment due date for the fine.
+          example: "2023-07-15"
+          pattern: '^\d{4}-\d{2}-\d{2}$'
+        paymentDate:
+          type: string
+          format: date
+          description: Date when the fine was paid.
+          example: "2023-07-10"
+          pattern: '^\d{4}-\d{2}-\d{2}$'
+        isPaid:
+          type: boolean
+          description: Indicates if the fine is paid.
+          example: true 
+        validityPoints:
+          type: integer
+          format: int32
+          description: Number of validity points deducted for the violation.
+          example: 1
+          minimum: 0
+        payload:
+          $ref: '#/components/schemas/Payload'
+
+    TachographCard:
+      type: object
+      required:
+      - id
+      - drivingInterval
+      description: Details of the tachograph card associated with the driver.
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          description: Tachograph card unique identifier.
+          example: "IT1234567890123456"
+          pattern: "^[A-Z0-9]{1,16}$"
+          uniqueItems: true
+        drivingInterval:
+          type: array
+          description: List of diverse driving intervals.
+          items:
+            $ref: '#/components/schemas/DrivingInterval'
+
+    DrivingInterval:
+      type: object
+      description: Details of the driving interval associated with the driver.
+      required:
+      - startDateTime
+      - endDateTime
+      additionalProperties: false
+      properties:
+        startDateTime:
+          type: string
+          format: date-time
+          description: Start date and time of the driving interval.
+          example: "2023-06-20T08:00:00Z"
+          pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        endDateTime:
+          type: string
+          format: date-time
+          description: End date and time of the driving interval.
+          example: "2023-06-20T18:00:00Z"
+          pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        etl:
+          type: array
+          description: List of diverse exceeded time limits.
+          items:
+            $ref: '#/components/schemas/ExceededTimeLimits'
+
+    ExceededTimeLimits:
+      description: Details of the exceeded time limits.
+      type: object
+      required:
+      - hours
+      - minutes
+      - seconds
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+          description: Type of time limit exceeded.
+          example: "Daily driving limit"
+          pattern: "^[\\s\\S]{1,20}$"
+        hours:
+          type: integer
+          format: int32
+          description: Number of hours exceeded.
+          example: 1
+          minimum: 0
+        minutes:
+          type: integer
+          format: int32
+          description: Number of minutes exceeded.
+          example: 1
+          minimum: 0
+          maximum: 59
+        seconds:
+          type: integer
+          format: int32
+          description: Number of seconds exceeded. 
+          example: 20
+          minimum: 0
+          maximum: 59
+
+    Payload:
+      type: object
+      description: Additional information.
+      additionalProperties: true
+      example:
+        additionInformation: Information XX
