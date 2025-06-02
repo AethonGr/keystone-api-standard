@@ -47,13 +47,29 @@ git clone https://github.com/AethonGr/keystone-api-standard
 cd keystone-api-standard
 ```
 
-### 2. Install Dependencies
+### 2. Install the Framework and Dependencies
 
-Ensure you have Python 3.10+ installed. Then, install the required dependencies:
+Ensure you have Python 3.10+ installed. You can install the framework and its dependencies in one of two ways:
+
+#### Option 1: Install as a standard Python package (Recommended)
+
+If you want to use the framework as a Python package, install it using:
+
+```bash
+pip install .
+```
+
+This links the installation to your cloned repository, so any changes you make to the source code (e.g., in the `api/` directory) will be immediately effective.
+
+#### Option 2: Use the repository "as is"
+
+If you want to work directly with the cloned repository, install the dependencies using:
 
 ```bash
 pip install -r requirements.txt
 ```
+
+This approach is suitable for users who want to explore or modify the framework without installing it as a Python package.
 
 ### 3. Build Your Server
 
