@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: KEYSTONE API Standard
-  version: v0.1.0
+  version: v0.2.0
   license:
     name: "CC BY 4.0"
     url: "https://creativecommons.org/licenses/by/4.0/"
@@ -20,17 +20,19 @@ info:
     Conceptually, the KEYSTONE API Standard works as a guidance framework: every Data Producer designs their API according to the shared rules, and every Data Consumer queries APIs that adhere to this guidance. This align-to-the-standard approach replaces tangled point-to-point integrations with a scalable, maintainable architecture. Supplementary tools, like client libraries and modular access scripts, further streamline development, making implementation faster and less error-prone.
 
     ## Key Features
-    - **Transport Operations**: Manage and track transport operations, including real-time data for transportation phases, route planning, and logistics coordination.
+    - **Transport Operations**: Manage and track transport operations, including real-time data for transportation phases, route planning, and logistics coordination. This also includes the integration of the eCMR, provided by [Open Logistics Foundation](https://openlogisticsfoundation.org/ecmr/) (v0.1) under the [Open Logistics Foundation License v1.3](https://www.openlogisticsfoundation.org/licenses/).
     - **Vehicle Information**: Access data related to vehicles used in transport operations, including geolocation, registration details, and maintenance status.
     - **Driver Information**: Retrieve driver data, including qualifications, licenses, tachograph cards, and violation records.
+    - **Organization Information**: Provides organization information for logistics operators, shippers, and receivers.
 
     This specification ensures that users can integrate the **KEYSTONE API Standard** into their systems, enabling smooth, seamless, and secure communication within the logistics ecosystem.
 
     ## API Structure
     The **KEYSTONE API Standard** is divided into the following main categories of endpoints:
-    - **Transport Operations**: Covers all aspects of managing and tracking transport operations.
+    - **Transport Operations**: Covers all aspects of managing and tracking transport operations, including the management of eCMRs.
     - **Vehicles**: Provides access to detailed vehicle data, including geolocation and status.
     - **Drivers**: Includes information about driver qualifications, licenses, and traffic violations.
+    - **Organizations**: Manages organization data for logistics operators, shippers, and receivers.
 
     Each path supports operations such as:
     - **Create (POST)**: Add new data.
@@ -44,26 +46,29 @@ info:
     - **Transport Operation**: Endpoints for managing transport operations, including schedules, phases, and documents.
     - **Vehicle**: Endpoints for vehicle management, including geolocation, registration, and maintenance.
     - **Driver**: Endpoints for managing driver-related information, such as license and violations.
+    - **Organization**: Endpoints for managing organization data, including logistics operators, shippers, and receivers.
 
     ## Paths
     The API defines the following key paths and operations:
 
     ### Transport Operations
-    - `/transport-operations/`: Create new transport operation data or retrieve all ongoing transport operation data.
-    - `/transport-operations/{transportOperationId}/`: Retrieve, update, or delete specific transport operation data using transport ID.
-    - `/transport-operations/{transportOperationId}/schedules/`: Retrieve or update schedule data related to a specific transport operation using transport ID.
-    - `/transport-operations/{transportOperationId}/phases/`: Retrieve or append phase data related to a specific transport operation using transport ID.
+    - `/transport-operations/`: Create new transport operation data or retrieve all transport operation data, optionally filtered by operator ID, driver ID, location mode, starting point country code, and ending point country code.
+    - `/transport-operations/{transportOperationId}/`: Retrieve, update, or delete specific transport operation data using transport ID, optionally filtered by operator ID.
+    - `/transport-operations/{transportOperationId}/schedules/`: Retrieve or update schedule data related to a specific transport operation using transport ID, optionally filtered by operator ID.
+    - `/transport-operations/{transportOperationId}/phases/`: Retrieve or append phase data related to a specific transport operation using transport ID, optionally filtered by operator ID.
     - `/transport-operations/{transportOperationId}/phases/{phaseId}/`: Retrieve, update, or delete specific phase data using transport ID and phase ID.
-    - `/transport-operations/{transportOperationId}/documents/`: Retrieve or append the international consignment notes data related to a specific transport operation using transport ID.
+    - `/transport-operations/{transportOperationId}/documents/`: Retrieve or append the international consignment notes data related to a specific transport operation using transport ID, optionally filtered by operator ID.
     - `/transport-operations/{transportOperationId}/documents/{referenceCode}/`: Retrieve, update, or delete specific the international consignment notes data using transport ID and reference code.
-    - `/transport-operations/{countryCode}/{plateNumber}/`: Retrieve transport operation data using country code and license plate number.
+    - `/transport-operations/{countryCode}/{plateNumber}/`: Retrieve transport operation data using country code and license plate number, optionally filtered by phase state.
     - `/transport-operations/{countryCode}/{plateNumber}/schedules/`: Retrieve the schedule of a transport operation using country code and license plate number.
     - `/transport-operations/{countryCode}/{plateNumber}/phases/`: Retrieve phase data of a transport operation using country code and license plate number.
-    - `/transport-operations/{countryCode}/{plateNumber}/phases/{phaseId}`: Retrieve specific phase data of a transport operation using country code, license plate number, and phase ID.
+    - `/transport-operations/{countryCode}/{plateNumber}/phases/{phaseId}/`: Retrieve specific phase data of a transport operation using country code, license plate number, and phase ID.
     - `/transport-operations/{countryCode}/{plateNumber}/documents/`: Retrieve the international consignment notes data of a transport operation using country code and license plate number.
     - `/transport-operations/{countryCode}/{plateNumber}/documents/{referenceCode}/`: Retrieve specific the international consignment notes data of a transport operation using country code, license plate number, and reference code.
     - `/transport-operations/locations/`: Retrieve all locations related to transport operations.
     - `/transport-operations/locations/{mode}/`: Retrieve all locations related to transport operations by mode.
+    - `/transport-operations/ecmr/`: Create a new eCMR.
+    - `/transport-operations/ecmr/{ecmrId}`: Retrieve, update, or delete a specific eCMR by its ID.
 
     ### Vehicles
     - `/vehicles/`: Create new vehicle data or retrieve all vehicle data.
@@ -84,11 +89,16 @@ info:
     - `/drivers/{countryCode}/{vat}/tachograph-cards/`: Retrieve the driver's tachograph card data by country code and vat number.
     - `/drivers/{countryCode}/{vat}/tachograph-cards/{tachographCardId}/`: Retrieve specific tachograph card data using the country code, vat number, and tachograph card ID.
 
+    ### Organizations
+    - `/organizations/`: Create new organization data or retrieve all organization data, optionally filtered by type.
+    - `/organizations/{organizationId}/`: Retrieve, update, or delete organization data by organization ID.
+
     ## Data Schema
     The API uses reusable data structures to ensure consistency:
     - **Transport Operation**: Contains all details related to a transport operation, including phases and international consignment notes.
     - **Vehicle**: Provides vehicle-specific details, including geolocation, registration, and maintenance information.
     - **Driver**: Contains driver-specific information, including qualifications, licenses, and tachograph cards.
+    - **Organization**: Contains organization-specific information, including logistics operators, shippers, and receivers.
 
     ## Integration Guidelines
     To integrate the **KEYSTONE API Standard** into your system:
@@ -114,6 +124,8 @@ tags:
     description: Information about vehicle.
   - name: Driver
     description: Information about driver.
+  - name: Organization
+    description: Information about organizations (logistics operators, shippers, receivers).
 
 paths:
 # Transport Operation
@@ -159,8 +171,43 @@ paths:
     get:
       tags:
         - Transport Operation
-      summary: Get all ongoing transport operation data
+      summary: Get all transport operation data
       operationId: getTransportOperation
+      parameters:
+        - name: operatorId
+          in: query
+          description: "Filter by the unique identifier of the transport operation's operator."
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: driverId
+          in: query
+          description: "Filter by the unique identifier of the driver assigned to the transport operation."
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: locationMode
+          in: query
+          description: "Filter by the mode of any location associated with the transport operation."
+          required: false
+          schema:
+            $ref: '#/components/schemas/Mode'
+        - name: startingPointCountryCode
+          in: query
+          description: "Filter by the country code of the starting point."
+          required: false
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
+        - name: endingPointCountryCode
+          in: query
+          description: "Filter by the country code of the ending point."
+          required: false
+          schema:
+            type: string
+            pattern: "^[A-Z]{2,4}$"
       responses:
         '200':
           description: Transport operation data retrieved successfully  
@@ -202,6 +249,13 @@ paths:
           description: Unique identifier for the transport operation.
           in: path
           required: true
+          schema:
+            type: integer
+            format: int64
+        - name: operatorId
+          in: query
+          description: "Filter by the unique identifier of the transport operation's operator."
+          required: false
           schema:
             type: integer
             format: int64
@@ -360,6 +414,13 @@ paths:
           schema:
             type: integer
             format: int64
+        - name: operatorId
+          in: query
+          description: "Filter by the unique identifier of the transport operation's operator."
+          required: false
+          schema:
+            type: integer
+            format: int64
       responses:
         '200':
           description: Schedule data retrieved successfully 
@@ -468,6 +529,13 @@ paths:
           schema:
             type: integer
             format: int64
+        - name: operatorId
+          in: query
+          description: "Filter by the unique identifier of the transport operation's operator."
+          required: false
+          schema:
+            type: integer
+            format: int64
       responses:
         '200':
           description: Phase data retrieved successfully 
@@ -482,6 +550,7 @@ paths:
                     location:
                       id: 54546546
                       description: "Warehouse A"
+                      countryCode: "IT"
                       coordinates:
                         latitude: 45.4642
                         longitude: 9.1900
@@ -492,6 +561,7 @@ paths:
                     location:
                       id: 54546546
                       description: "Warehouse A"
+                      countryCode: "FR"
                       coordinates:
                         latitude: 48.8566
                         longitude: 2.3522
@@ -585,7 +655,7 @@ paths:
                     type: string
                     example: "Unexpected server error"
 
-  /transport-operations/{transportOperationId}/phases/{phaseId}:
+  /transport-operations/{transportOperationId}/phases/{phaseId}/:
     get:
       tags:
         - Transport Operation
@@ -721,6 +791,13 @@ paths:
           schema:
             type: integer
             format: int64
+        - name: operatorId
+          in: query
+          description: "Filter by the unique identifier of the transport operation's operator."
+          required: false
+          schema:
+            type: integer
+            format: int64
       responses:
         '200':
           description: Document data retrieved successfully 
@@ -732,11 +809,24 @@ paths:
                   $ref: '#/components/schemas/Document'
                 example: 
                   - referenceCode: "DOC123456"
-                    senderOrganization: "Sender Org"
-                    receiverOrganization: "Receiver Org"
+                    senderOrganization:
+                      id: 111111111
+                      name: "ABC Logistics"
+                      countryCode: "IT"
+                      vat: "IT1234567890"
+                      address: "123 Main St, Milan, Italy"
+                      type: "OPERATOR"
+                    receiverOrganization:
+                      id: 222222222
+                      name: "XYZ Shipping"
+                      countryCode: "DE"
+                      vat: "DE9876543210"
+                      address: "456 Business Ave, Berlin, Germany"
+                      type: "CUSTOMER"
                     startingPoint:
                       id: 54546546
                       description: "Warehouse A"
+                      countryCode: "IT"
                       coordinates:
                         latitude: 45.4642
                         longitude: 9.1900
@@ -744,6 +834,7 @@ paths:
                     endingPoint:
                       id: 22252535
                       description: "Warehouse B"
+                      countryCode: "FR"
                       coordinates:
                         latitude: 48.8566
                         longitude: 2.3522
@@ -770,11 +861,24 @@ paths:
                           um: "cm"
                     report: "report.pdf"
                   - referenceCode: "DOC654321"
-                    senderOrganization: "Sender Org 2"
-                    receiverOrganization: "Receiver Org 2"
+                    senderOrganization:
+                      id: 333333333
+                      name: "Global Transport Co"
+                      countryCode: "FR"
+                      vat: "FR1122334455"
+                      address: "789 Commerce Blvd, Paris, France"
+                      type: "OPERATOR"
+                    receiverOrganization:
+                      id: 444444444
+                      name: "Express Delivery Ltd"
+                      countryCode: "ES"
+                      vat: "ES5566778899"
+                      address: "321 Industrial St, Madrid, Spain"
+                      type: "CUSTOMER"
                     startingPoint:
                       id: 54546546
                       description: "Warehouse C"
+                      countryCode: "IT"
                       coordinates:
                         latitude: 40.7128
                         longitude: -74.0060
@@ -782,6 +886,7 @@ paths:
                     endingPoint:
                       id: 22252535
                       description: "Warehouse D"
+                      countryCode: "IT"
                       coordinates:
                         latitude: 34.0522
                         longitude: -118.2437
@@ -1061,8 +1166,8 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: "Unexpected server error"           
-
+                    example: "Unexpected server error"
+        
   /transport-operations/{countryCode}/{plateNumber}/:
     get:
       tags:
@@ -1084,6 +1189,12 @@ paths:
           schema:
             type: string
             pattern: "^[\\s\\S]{1,20}$"
+        - name: phaseState
+          in: query
+          description: "Filter by the state of the specified phase."
+          required: false
+          schema:
+            $ref: '#/components/schemas/State'
       responses:
         '200':
           description: Transport operation data retrieved successfully 
@@ -1216,6 +1327,7 @@ paths:
                     location:
                       id: 54546546
                       description: "Warehouse A"
+                      countryCode: "IT"
                       coordinates:
                         latitude: 45.4642
                         longitude: 9.1900
@@ -1226,6 +1338,7 @@ paths:
                     location:
                       id: 44546544
                       description: "Warehouse A"
+                      countryCode: "FR"
                       coordinates:
                         latitude: 48.8566
                         longitude: 2.3522
@@ -1263,7 +1376,7 @@ paths:
                     type: string
                     example: "Unexpected server error"
 
-  /transport-operations/{countryCode}/{plateNumber}/phases/{phaseId}:
+  /transport-operations/{countryCode}/{plateNumber}/phases/{phaseId}/:
     get:
       tags:
         - Transport Operation
@@ -1361,11 +1474,24 @@ paths:
                   $ref: '#/components/schemas/Document'
                 example:
                   - referenceCode: "DOC123456"
-                    senderOrganization: "Sender Org"
-                    receiverOrganization: "Receiver Org"
+                    senderOrganization:
+                      id: 111111111
+                      name: "ABC Logistics"
+                      countryCode: "IT"
+                      vat: "IT1234567890"
+                      address: "123 Main St, Milan, Italy"
+                      type: "OPERATOR"
+                    receiverOrganization:
+                      id: 222222222
+                      name: "XYZ Shipping"
+                      countryCode: "DE"
+                      vat: "DE9876543210"
+                      address: "456 Business Ave, Berlin, Germany"
+                      type: "CUSTOMER"
                     startingPoint:
                       id: 54546546
                       description: "Warehouse A"
+                      countryCode: "IT"
                       coordinates:
                         latitude: 45.4642
                         longitude: 9.1900
@@ -1373,6 +1499,7 @@ paths:
                     endingPoint:
                       id: 22252535
                       description: "Warehouse B"
+                      countryCode: "FR"
                       coordinates:
                         latitude: 48.8566
                         longitude: 2.3522
@@ -1399,11 +1526,24 @@ paths:
                           um: "cm"
                     report: "report.pdf"
                   - referenceCode: "DOC654321"
-                    senderOrganization: "Sender Org 2"
-                    receiverOrganization: "Receiver Org 2"
+                    senderOrganization:
+                      id: 333333333
+                      name: "Global Transport Co"
+                      countryCode: "FR"
+                      vat: "FR1122334455"
+                      address: "789 Commerce Blvd, Paris, France"
+                      type: "OPERATOR"
+                    receiverOrganization:
+                      id: 444444444
+                      name: "Express Delivery Ltd"
+                      countryCode: "ES"
+                      vat: "ES5566778899"
+                      address: "321 Industrial St, Madrid, Spain"
+                      type: "CUSTOMER"
                     startingPoint:
                       id: 45355554
                       description: "Warehouse C"
+                      countryCode: "IT"
                       coordinates:
                         latitude: 40.7128
                         longitude: -74.0060
@@ -1411,6 +1551,7 @@ paths:
                     endingPoint:
                       id: 49252535
                       description: "Warehouse D"
+                      countryCode: "IT"
                       coordinates:
                         latitude: 34.0522
                         longitude: -118.2437
@@ -1615,6 +1756,191 @@ paths:
                     type: string
                     example: "Unexpected server error"
 
+  /transport-operations/ecmr/:
+    post:
+      tags:
+        - Transport Operation
+      summary: Create a new eCMR
+      operationId: createECMR
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EcmrModel'
+      responses:
+        '201':
+          description: eCMR created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EcmrModel'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /transport-operations/ecmr/{ecmrId}/:
+    get:
+      tags:
+        - Transport Operation
+      summary: Get a specific eCMR by ID
+      operationId: getECMRById
+      parameters:
+        - name: ecmrId
+          in: path
+          description: UUID of the eCMR
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: The requested eCMR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EcmrModel'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "eCMR not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"            
+    put:
+      tags:
+        - Transport Operation
+      summary: Update an eCMR by ID
+      operationId: updateECMR
+      parameters:
+        - name: ecmrId
+          in: path
+          description: UUID of the eCMR
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EcmrModel'
+      responses:
+        '200':
+          description: eCMR updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EcmrModel'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "eCMR not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"        
+    delete:
+      tags:
+        - Transport Operation
+      summary: Delete an eCMR by ID
+      operationId: deleteECMR
+      parameters:
+        - name: ecmrId
+          in: path
+          description: UUID of the eCMR
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: eCMR deleted successfully
+          content: {}
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "eCMR not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+  
 # Vehicle
   /vehicles/:
     post:
@@ -3179,6 +3505,257 @@ paths:
                       type: string
                       example: "Unexpected server error"
 
+# Organization
+  /organizations/:
+    post:
+      tags:
+        - Organization
+      operationId: addOrganization
+      summary: Create new organization data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organization'
+            example:
+              id: 987654321
+              name: "ABC Logistics"
+              countryCode: "IT"
+              vat: "IT1234567890"
+              address: "123 Main St, Milan, Italy"
+              type: "OPERATOR"
+      responses:
+        '201':
+          description: Organization data created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+    get:
+      tags:
+        - Organization
+      summary: Get all organization data
+      operationId: getOrganization
+      parameters:
+        - name: type
+          in: query
+          description: The type of organization to filter by.
+          required: false
+          schema:
+            $ref: '#/components/schemas/OrganizationType'
+      responses:
+        '200':
+          description: Organization data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Organization'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "No organizations found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
+  /organizations/{organizationId}/:
+    get:
+      tags:
+        - Organization
+      summary: Get organization data by organization ID
+      operationId: getOrganizationById
+      parameters:
+        - name: organizationId
+          description: Unique identifier for the organization.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Organization data retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid organization ID"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Organization not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+    put:
+      tags:
+        - Organization
+      summary: Update organization data by organization ID
+      operationId: updateOrganizationById
+      parameters:
+        - name: organizationId
+          description: Unique identifier for the organization.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organization'
+            example:
+              id: 987654321
+              name: "ABC Logistics Updated"
+              countryCode: "IT"
+              vat: "IT1234567890"
+              address: "456 Updated St, Milan, Italy"
+              type: "OPERATOR"
+      responses:
+        '200':
+          description: Organization data updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid input data"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Organization not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+    delete:
+      tags:
+        - Organization
+      summary: Delete specific organization data by organization ID
+      operationId: deleteOrganizationById
+      parameters:
+        - name: organizationId
+          description: Unique identifier for the organization.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Organization data deleted successfully
+          content: {}
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid organization ID"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Organization not found"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unexpected server error"
+
 components:
   schemas:
     TransportOperation:
@@ -3189,7 +3766,6 @@ components:
       - schedule
       - driver
       - vehicle 
-      - document
       description: Details about the transport operation.
       additionalProperties: false
       properties:
@@ -3219,6 +3795,11 @@ components:
           description: List of the international consignment notes used for transport operation.
           items:
             $ref: '#/components/schemas/Document'
+        ecmr:
+          type: array
+          description: List of the eCMR documents used for transport operation.
+          items:
+            $ref: '#/components/schemas/EcmrModel'
         payload:
           $ref: '#/components/schemas/Payload'
 
@@ -3264,11 +3845,20 @@ components:
     Organization:
       type: object
       required:
+        - id
         - name
         - countryCode
+        - type
       description: Details about the organization.
       additionalProperties: false
       properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier for the organization.
+          example: 123456789
+          minimum: 1
+          uniqueItems: true
         name:
           type: string
           description: Name of the organization.
@@ -3289,12 +3879,23 @@ components:
           description: Address of the organization.
           example: "123 Main St, City, Country"
           pattern: "^[\\s\\S]{1,100}$"
+        type:
+          $ref: '#/components/schemas/OrganizationType'
+
+    OrganizationType:
+      type: string
+      description: The type of the organization.
+      enum:
+        - OPERATOR
+        - CUSTOMER
+      example: "OPERATOR"
 
     Location:
       type: object
       required:
       - id
       - description
+      - countryCode
       - mode
       description: Details about the location.
       additionalProperties: false
@@ -3311,6 +3912,11 @@ components:
           description: Description about the location.
           example: "Place X"
           pattern: "^[\\s\\S]{1,100}$"
+        countryCode:
+          type: string
+          description: Country code of the location.
+          example: "IT"
+          pattern: "^[A-Z]{2,4}$"
         mode:
           $ref: '#/components/schemas/Mode'
         coordinates:
@@ -3999,3 +4605,519 @@ components:
       additionalProperties: true
       example:
         additionInformation: Information XX
+
+    # Schemas for eCMR
+    CarrierContactInformation:
+      type: object
+      properties:
+        email:
+          maxLength: 255
+          minLength: 0
+          type: string
+        carrierPhone:
+          pattern: "^(\\+|\\d)[0-9\\s\\-().]{0,31}$"
+          type: string
+        driverPhone:
+          pattern: "^(\\+|\\d)[0-9\\s\\-().]{0,31}$"
+          type: string
+    CarrierCountryCode:
+      type: object
+      properties:
+        region:
+          maxLength: 60
+          minLength: 2
+          type: string
+        value:
+          maxLength: 2
+          minLength: 2
+          pattern: "^[A-Z]{2}$"
+          type: string
+    CarrierInformation:
+      type: object
+      properties:
+        carrierCompanyName:
+          type: string
+        carrierDriverName:
+          maxLength: 60
+          minLength: 2
+          type: string
+        carrierStreet:
+          maxLength: 255
+          minLength: 2
+          type: string
+        carrierPostcode:
+          maxLength: 17
+          minLength: 2
+          type: string
+        carrierCity:
+          maxLength: 60
+          minLength: 2
+          type: string
+        carrierCountryCode:
+          "$ref": "#/components/schemas/CarrierCountryCode"
+        carrierLicensePlate:
+          maxLength: 30
+          minLength: 2
+          type: string
+        carrierContactInformation:
+          "$ref": "#/components/schemas/CarrierContactInformation"
+    CarriersReservationsAndObservationsOnTakingOverTheGoods:
+      type: object
+      properties:
+        carrierReservationsObservations:
+          maxLength: 512
+          minLength: 2
+          type: string
+        senderReservationsObservationsSignature:
+          "$ref": "#/components/schemas/Signature"
+    CashOnDelivery:
+      type: object
+      properties:
+        customCashOnDelivery:
+          maximum: 999999
+          minimum: 0
+          type: number
+          format: float
+    ConsigneeContactInformation:
+      type: object
+      properties:
+        email:
+          maxLength: 255
+          minLength: 0
+          type: string
+        phone:
+          pattern: "^(\\+|\\d)[0-9\\s\\-().]{0,31}$"
+          type: string
+    ConsigneeCountryCode:
+      type: object
+      properties:
+        region:
+          maxLength: 60
+          minLength: 2
+          type: string
+        value:
+          maxLength: 2
+          minLength: 2
+          pattern: "^[A-Z]{2}$"
+          type: string
+    ConsigneeInformation:
+      type: object
+      properties:
+        consigneeCompanyName:
+          type: string
+        consigneePersonName:
+          maxLength: 60
+          minLength: 2
+          type: string
+        consigneePostcode:
+          maxLength: 17
+          minLength: 2
+          type: string
+        consigneeCity:
+          maxLength: 60
+          minLength: 2
+          type: string
+        consigneeCountryCode:
+          "$ref": "#/components/schemas/ConsigneeCountryCode"
+        consigneeStreet:
+          maxLength: 255
+          minLength: 2
+          type: string
+        consigneeContactInformation:
+          "$ref": "#/components/schemas/ConsigneeContactInformation"
+    CustomCharge:
+      type: object
+      properties:
+        value:
+          maximum: 99999
+          minimum: 0
+          type: number
+          format: float
+        currency:
+          maxLength: 512
+          minLength: 2
+          type: string
+        payer:
+          type: string
+          enum:
+          - SENDER
+          - CONSIGNEE
+    DeliveryOfTheGoods:
+      type: object
+      properties:
+        logisticsLocationCity:
+          maxLength: 60
+          minLength: 2
+          type: string
+        logisticsLocationOpeningHours:
+          maxLength: 255
+          minLength: 2
+          type: string
+    DocumentsHandedToCarrier:
+      type: object
+      properties:
+        documentsRemarks:
+          maxLength: 512
+          minLength: 2
+          type: string
+    Established:
+      type: object
+      properties:
+        customEstablishedDate:
+          type: string
+          format: date-time
+        customEstablishedIn:
+          maxLength: 30
+          minLength: 2
+          type: string
+    GoodsReceived:
+      type: object
+      properties:
+        confirmedLogisticsLocationName:
+          maxLength: 60
+          minLength: 2
+          type: string
+        consigneeReservationsObservations:
+          maxLength: 512
+          minLength: 2
+          type: string
+        consigneeSignature:
+          "$ref": "#/components/schemas/Signature"
+        consigneeSignatureDate:
+          type: string
+          format: date-time
+        consigneeTimeOfArrival:
+          type: string
+          format: date-time
+        consigneeTimeOfDeparture:
+          type: string
+          format: date-time
+    GrossWeightInKg:
+      type: object
+      properties:
+        supplyChainConsignmentItemGrossWeight:
+          maximum: 99999
+          minimum: 0
+          type: number
+          format: float
+    Item:
+      type: object
+      properties:
+        marksAndNos:
+          "$ref": "#/components/schemas/MarksAndNos"
+        numberOfPackages:
+          "$ref": "#/components/schemas/NumberOfPackages"
+        methodOfPacking:
+          "$ref": "#/components/schemas/MethodOfPacking"
+        natureOfTheGoods:
+          "$ref": "#/components/schemas/NatureOfTheGoods"
+        grossWeightInKg:
+          "$ref": "#/components/schemas/GrossWeightInKg"
+        volumeInM3:
+          "$ref": "#/components/schemas/VolumeInM3"
+    LogisticsShippingMarksCustomBarcode:
+      type: object
+      properties:
+        barcode:
+          maxLength: 35
+          minLength: 2
+          type: string
+    MarksAndNos:
+      type: object
+      properties:
+        logisticsShippingMarksMarking:
+          maxLength: 512
+          minLength: 2
+          type: string
+        logisticsShippingMarksCustomBarcodeList:
+          maxItems: 32
+          minItems: 0
+          type: array
+          items:
+            "$ref": "#/components/schemas/LogisticsShippingMarksCustomBarcode"
+    MethodOfPacking:
+      type: object
+      properties:
+        logisticsPackageType:
+          maxLength: 35
+          minLength: 2
+          type: string
+    MultiConsigneeShipment:
+      required:
+      - isMultiConsigneeShipment
+      type: object
+      properties:
+        isMultiConsigneeShipment:
+          type: boolean
+    NatureOfTheGoods:
+      type: object
+      properties:
+        transportCargoIdentification:
+          maxLength: 512
+          minLength: 2
+          type: string
+    NonContractualPartReservedForTheCarrier:
+      type: object
+      properties:
+        nonContractualCarrierRemarks:
+          maxLength: 512
+          minLength: 2
+          type: string
+    NumberOfPackages:
+      type: object
+      properties:
+        logisticsPackageItemQuantity:
+          maximum: 9999
+          minimum: 0
+          type: integer
+          format: int32
+    OtherUsefulParticulars:
+      type: object
+      properties:
+        customParticulars:
+          maxLength: 512
+          minLength: 2
+          type: string
+    ReferenceIdentificationNumber:
+      type: object
+      properties:
+        value:
+          maxLength: 35
+          minLength: 1
+          type: string
+    SenderContactInformation:
+      type: object
+      properties:
+        email:
+          maxLength: 255
+          minLength: 0
+          type: string
+        phone:
+          pattern: "^(\\+|\\d)[0-9\\s\\-().]{0,31}$"
+          type: string
+    SenderCountryCode:
+      type: object
+      properties:
+        region:
+          maxLength: 60
+          minLength: 2
+          type: string
+        value:
+          maxLength: 2
+          minLength: 2
+          pattern: "^[A-Z]{2}$"
+          type: string
+    SenderInformation:
+      type: object
+      properties:
+        senderCompanyName:
+          type: string
+        senderPersonName:
+          maxLength: 60
+          minLength: 2
+          type: string
+        senderStreet:
+          maxLength: 255
+          minLength: 2
+          type: string
+        senderPostcode:
+          maxLength: 17
+          minLength: 2
+          type: string
+        senderCity:
+          maxLength: 60
+          minLength: 2
+          type: string
+        senderCountryCode:
+          "$ref": "#/components/schemas/SenderCountryCode"
+        senderContactInformation:
+          "$ref": "#/components/schemas/SenderContactInformation"
+    SendersInstructions:
+      type: object
+      properties:
+        transportInstructionsDescription:
+          maxLength: 512
+          minLength: 2
+          type: string
+    Signature:
+      type: object
+      properties:
+        type:
+          type: string
+        userName:
+          type: string
+        userCompany:
+          type: string
+        userStreet:
+          type: string
+        userPostCode:
+          type: string
+        userCity:
+          type: string
+        userCountry:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        data:
+          type: string
+    SpecialAgreementsSenderCarrier:
+      type: object
+      properties:
+        customSpecialAgreement:
+          maxLength: 255
+          minLength: 2
+          type: string
+    SuccessiveCarrierContactInformation:
+      type: object
+      properties:
+        email:
+          maxLength: 255
+          minLength: 0
+          type: string
+        carrierPhone:
+          pattern: "^(\\+|\\d)[0-9\\s\\-().]{0,31}$"
+          type: string
+        driverPhone:
+          pattern: "^(\\+|\\d)[0-9\\s\\-().]{0,31}$"
+          type: string
+    SuccessiveCarrierCountryCode:
+      type: object
+      properties:
+        region:
+          maxLength: 60
+          minLength: 2
+          type: string
+        value:
+          maxLength: 2
+          minLength: 2
+          pattern: "^[A-Z]{2}$"
+          type: string
+    SuccessiveCarrierInformation:
+      type: object
+      properties:
+        successiveCarrierCity:
+          maxLength: 60
+          minLength: 2
+          type: string
+        successiveCarrierCountryCode:
+          "$ref": "#/components/schemas/SuccessiveCarrierCountryCode"
+        successiveCarrierCompanyName:
+          type: string
+        successiveCarrierDriverName:
+          maxLength: 60
+          minLength: 2
+          type: string
+        successiveCarrierPostcode:
+          maxLength: 17
+          minLength: 2
+          type: string
+        successiveCarrierStreet:
+          maxLength: 255
+          minLength: 2
+          type: string
+        successiveCarrierContactInformation:
+          "$ref": "#/components/schemas/SuccessiveCarrierContactInformation"
+    TakingOverTheGoods:
+      type: object
+      properties:
+        takingOverTheGoodsPlace:
+          maxLength: 60
+          minLength: 2
+          type: string
+        logisticsTimeOfArrivalDateTime:
+          type: string
+          format: date-time
+        logisticsTimeOfDepartureDateTime:
+          type: string
+          format: date-time
+    ToBePaidBy:
+      type: object
+      properties:
+        customChargeCarriage:
+          "$ref": "#/components/schemas/CustomCharge"
+        customChargeSupplementary:
+          "$ref": "#/components/schemas/CustomCharge"
+        customChargeCustomsDuties:
+          "$ref": "#/components/schemas/CustomCharge"
+        customChargeOther:
+          "$ref": "#/components/schemas/CustomCharge"
+    VolumeInM3:
+      type: object
+      properties:
+        supplyChainConsignmentItemGrossVolume:
+          maximum: 9999
+          minimum: 0
+          type: number
+          format: float
+    EcmrConsignment:
+      type: object
+      properties:
+        senderInformation:
+          "$ref": "#/components/schemas/SenderInformation"
+        multiConsigneeShipment:
+          "$ref": "#/components/schemas/MultiConsigneeShipment"
+        consigneeInformation:
+          "$ref": "#/components/schemas/ConsigneeInformation"
+        takingOverTheGoods:
+          "$ref": "#/components/schemas/TakingOverTheGoods"
+        deliveryOfTheGoods:
+          "$ref": "#/components/schemas/DeliveryOfTheGoods"
+        sendersInstructions:
+          "$ref": "#/components/schemas/SendersInstructions"
+        carrierInformation:
+          "$ref": "#/components/schemas/CarrierInformation"
+        successiveCarrierInformation:
+          "$ref": "#/components/schemas/SuccessiveCarrierInformation"
+        carriersReservationsAndObservationsOnTakingOverTheGoods:
+          "$ref": "#/components/schemas/CarriersReservationsAndObservationsOnTakingOverTheGoods"
+        documentsHandedToCarrier:
+          "$ref": "#/components/schemas/DocumentsHandedToCarrier"
+        itemList:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Item"
+        specialAgreementsSenderCarrier:
+          "$ref": "#/components/schemas/SpecialAgreementsSenderCarrier"
+        toBePaidBy:
+          "$ref": "#/components/schemas/ToBePaidBy"
+        otherUsefulParticulars:
+          "$ref": "#/components/schemas/OtherUsefulParticulars"
+        cashOnDelivery:
+          "$ref": "#/components/schemas/CashOnDelivery"
+        established:
+          "$ref": "#/components/schemas/Established"
+        goodsReceived:
+          "$ref": "#/components/schemas/GoodsReceived"
+        nonContractualPartReservedForTheCarrier:
+          "$ref": "#/components/schemas/NonContractualPartReservedForTheCarrier"
+        referenceIdentificationNumber:
+          "$ref": "#/components/schemas/ReferenceIdentificationNumber"
+    EcmrModel:
+      required:
+      - ecmrConsignment
+      type: object
+      properties:
+        ecmrId:
+          type: string
+        ecmrConsignment:
+          "$ref": "#/components/schemas/EcmrConsignment"
+        ecmrStatus:
+          type: string
+          enum:
+          - NEW
+          - LOADING
+          - IN_TRANSPORT
+          - DELIVERED
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        editedAt:
+          type: string
+          format: date-time
+        editedBy:
+          type: string
+        originUrl:
+          type: string

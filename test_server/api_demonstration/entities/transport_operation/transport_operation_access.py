@@ -10,8 +10,16 @@ be integrated with other APIs or services that interact with transport operation
 import os
 from pathlib import Path
 from typing import List, Optional
+from uuid import UUID
 
-from ...data_model import Document, Location, Phase, Schedule, TransportOperation
+from ...data_model import (
+    Document,
+    EcmrModel,
+    Location,
+    Phase,
+    Schedule,
+    TransportOperation,
+)
 from ...utils import JsonAccessManager
 
 
@@ -55,9 +63,23 @@ class TransportOperationAccess:
         """
         pass
 
-    def get_transport_operation(self) -> Optional[List[TransportOperation]]:
+    def get_transport_operation(
+        self,
+        operator_id: Optional[str] = None,
+        driver_id: Optional[str] = None,
+        location_mode: Optional[str] = None,
+        start_point_country_code: Optional[str] = None,
+        end_point_country_code: Optional[str] = None,
+    ) -> Optional[List[TransportOperation]]:
         """
-        Get all ongoing transport operation data.
+        Get all transport operation data.
+
+        Args:
+            operator_id (Optional[str]): The unique identifier of the transport operation's operator
+            driver_id (Optional[str]): The unique identifier of the driver assigned to the transport operation
+            location_mode (Optional[str]): The mode of any location associated with the transport operation
+            start_point_country_code (Optional[str]): The country code of the starting point
+            end_point_country_code (Optional[str]): The country code of the ending point
 
         Returns:
            Optional[List[TransportOperation]]: List of transport operation data if found
@@ -69,13 +91,14 @@ class TransportOperationAccess:
         return self.data_manager.get_all()
 
     def get_transport_operation_by_id(
-        self, transportOperationId: int
+        self, transportOperationId: int, operator_id: Optional[str] = None
     ) -> Optional[TransportOperation]:
         """
         Get a specific transport operation data by ID.
 
         Args:
             transportOperationId (int): Unique transport operation identifier
+            operator_id (Optional[str]): The unique identifier of the transport operation's operator
 
         Returns:
             Optional[TransportOperation]: Transport operation data if found
@@ -99,13 +122,14 @@ class TransportOperationAccess:
             TransportOperation: Updated transport operation data
 
         Example:
-            Query data using transportOperationId, update and return them in TransportOperation format
+            Query data using transportOperationId, update it with the provided data,
+            and return the updated data in TransportOperation format
         """
         pass
 
     def delete_transport_operation_by_id(self, transportOperationId: int) -> bool:
         """
-        Delete specific transport operation data by ID.
+        Delete a specific transport operation by ID.
 
         Args:
             transportOperationId (int): Unique transport operation identifier
@@ -122,13 +146,14 @@ class TransportOperationAccess:
         pass
 
     def get_schedule_by_transport_operation_id(
-        self, transportOperationId: int
+        self, transportOperationId: int, operator_id: Optional[str] = None
     ) -> Optional[Schedule]:
         """
         Get schedule data related to a specific transport operation by ID.
 
         Args:
             transportOperationId (int): Unique identifier for the transport operation
+            operator_id (Optional[str]): The unique identifier of the transport operation's operator
 
         Returns:
             Optional[Schedule]: Schedule data if found
@@ -157,13 +182,14 @@ class TransportOperationAccess:
         pass
 
     def get_phase_by_transport_operation_id(
-        self, transportOperationId: int
+        self, transportOperationId: int, operator_id: Optional[str] = None
     ) -> Optional[List[Phase]]:
         """
         Get all phase data related to a specific transport operation by ID.
 
         Args:
             transportOperationId (int): Unique identifier for the transport operation
+            operator_id (Optional[str]): The unique identifier of the transport operation's operator
 
         Returns:
             Optional[List[Phase]]: List of phase data if found
@@ -229,13 +255,14 @@ class TransportOperationAccess:
         pass
 
     def get_document_by_transport_operation_id(
-        self, transportOperationId: int
+        self, transportOperationId: int, operator_id: Optional[str] = None
     ) -> Optional[List[Document]]:
         """
         Get all international consignment notes related to a specific transport operation by ID.
 
         Args:
             transportOperationId (int): Unique identifier for the transport operation
+            operator_id (Optional[str]): The unique identifier of the transport operation's operator
 
         Returns:
             Optional[List[Document]]: List of document data if found
@@ -322,7 +349,7 @@ class TransportOperationAccess:
         pass
 
     def get_transport_operation_by_plate_number(
-        self, countryCode: str, plateNumber: str
+        self, countryCode: str, plateNumber: str, phase_state: Optional[str] = None
     ) -> Optional[TransportOperation]:
         """
         Get ongoing transport operation data by country code and license plate number.
@@ -330,6 +357,7 @@ class TransportOperationAccess:
         Args:
             countryCode (str): Country code of vehicle registration
             plateNumber (str): License plate number
+            phase_state (Optional[str]): The state of the specified phase
 
         Returns:
             Optional[TransportOperation]: Transport operation data if found
@@ -461,5 +489,56 @@ class TransportOperationAccess:
 
         Example:
             Query and return a list of locations in Location format based on the specified location mode
+        """
+        pass
+
+    def add_ecmr(self, data: EcmrModel) -> EcmrModel:
+        """
+        Create new eCMR data.
+
+        Args:
+            data (EcmrModel): eCMR data to add
+
+        Returns:
+            EcmrModel: Added eCMR data
+        """
+        pass
+
+    def get_ecmr_by_id(self, id: UUID) -> Optional[EcmrModel]:
+        """
+        Get eCMR data by ID.
+
+        Args:
+            id (UUID): The ID assigned to the eCMR by the eCMR Connector service upon creation.
+
+        Returns:
+            Optional[EcmrModel]: eCMR data if found
+        """
+        pass
+
+    def update_ecmr_by_id(self, id: UUID, data: EcmrModel) -> EcmrModel:
+        """
+        Update eCMR data by ID.
+
+        Args:
+            id (UUID): The ID assigned to the eCMR by the eCMR Connector service upon creation.
+            data (EcmrModel): Updated eCMR data
+
+        Returns:
+            EcmrModel: Updated eCMR data
+        """
+        pass
+
+    def delete_ecmr_by_id(self, id: UUID) -> bool:
+        """
+        Delete an eCMR by ID.
+
+        Args:
+            id (UUID): The ID assigned to the eCMR by the eCMR Connector service upon creation.
+
+        Returns:
+            bool:
+                - True if the deletion was successful.
+                - False if the eCMR with the given ID does not exist.
         """
         pass

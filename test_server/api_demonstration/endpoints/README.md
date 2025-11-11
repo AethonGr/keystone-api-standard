@@ -7,12 +7,13 @@ The `endpoints` folder contains endpoint definitions for the API endpoints. Thes
 - **Transport Operations Endpoints**: Defines endpoints for managing transport operations.
 - **Driver Endpoints**: Defines endpoints for managing driver-related data.
 - **Vehicle Endpoints**: Defines endpoints for managing vehicle-related data.
+- **Organization Endpoints**: Defines endpoints for managing organization-related data.
 
 ## Usage
 
 1. Review the endpoint definitions to understand the API structure.
 2. Select and use only the endpoints that are relevant to your specific requirements.
-3. Ensure that each endpoint is properly linked to its corresponding logic in the `categories` folder.
+3. Ensure that each endpoint is properly linked to its corresponding logic in the `entities` folder.
 
 ## Notes 
 

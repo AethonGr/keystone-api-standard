@@ -1,0 +1,6 @@
+The KEYSTONE API Standard repository and source distributions bundle libraries that are compatibly licensed. We list these here.
+
+Name: eCMR  
+License: Open Logistics Foundation License v1.3  
+Files: third_party/ecmr  
+  For details, see: third_party/ecmr/LICENSE

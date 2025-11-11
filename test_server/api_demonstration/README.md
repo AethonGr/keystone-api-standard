@@ -14,7 +14,7 @@ The `api` folder contains data models, endpoint definitions, and access scripts 
 
 ## Usage
 
-1. **Navigate to the Relevant Subfolder**: Choose the subfolder based on the domain you want to manage (e.g., `driver`, `vehicle`, or `transport_operation`).
+1. **Navigate to the Relevant Subfolder**: Choose the subfolder based on the domain you want to manage (e.g., `transport_operation`, `driver`).
 2. **Review the APIs**: Examine the APIs provided in the subfolder to understand their functionality.
 3. **Implement Access Logic**: Modify the `_access.py` scripts in the `entities` subfolder to implement custom logic for querying and managing data.
 4. **Link to Endpoints and Data Models**: Ensure that the access logic is properly linked to the endpoints in the `endpoints` folder and the data models in the `data_model` folder.

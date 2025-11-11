@@ -11,10 +11,19 @@ appropriate status codes, including success messages, error messages,
 and the requested data.
 """
 
+from uuid import UUID
+
 from flask import Response, jsonify, request
 
-from ...data_model import Document, Location, Mode, Phase, Schedule, TransportOperation
-
+from ...data_model import (
+    Document,
+    EcmrModel,
+    Location,
+    Mode,
+    Phase,
+    Schedule,
+    TransportOperation,
+)
 from .transport_operation_access import TransportOperationAccess
 
 
@@ -77,7 +86,7 @@ class TransportOperationAPI:
 
     def get_transport_operation(self) -> Response:
         """
-        Get all ongoing transport operation data.
+        Get all transport operation data.
 
         Args:
             None
@@ -86,9 +95,22 @@ class TransportOperationAPI:
             Response: The response with the transport operation data or error message.
         """
         try:
+            # Get query parameters
+            operator_id = request.args.get("operatorId")
+            driver_id = request.args.get("driverId")
+            location_mode = request.args.get("locationMode")
+            start_point_country_code = request.args.get("startPointCountryCode")
+            end_point_country_code = request.args.get("endPointCountryCode")
+
             # Call sub-API to get data
             transport_operation_data = (
-                self.transport_operation_access.get_transport_operation()
+                self.transport_operation_access.get_transport_operation(
+                    operator_id,
+                    driver_id,
+                    location_mode,
+                    start_point_country_code,
+                    end_point_country_code,
+                )
             )
 
             # Check if data is available
@@ -140,7 +162,10 @@ class TransportOperationAPI:
             Response: The response with the transport operation data or error message.
         """
         try:
-            # Validate required paramete
+            # Get query parameters
+            operator_id = request.args.get("operatorId")
+
+            # Validate required parameters
             if not transportOperationId:
                 return (
                     jsonify(
@@ -156,7 +181,7 @@ class TransportOperationAPI:
             # Call sub-API to get data
             transport_operation_data = (
                 self.transport_operation_access.get_transport_operation_by_id(
-                    transportOperationId
+                    transportOperationId, operator_id
                 )
             )
 
@@ -337,6 +362,9 @@ class TransportOperationAPI:
             Response: The response with the schedule data or error message.
         """
         try:
+            # Get query parameters
+            operator_id = request.args.get("operatorId")
+
             # Validate required parameters
             if not transportOperationId:
                 return (
@@ -353,7 +381,7 @@ class TransportOperationAPI:
             # Call sub-API to get schedule data
             schedule_data = (
                 self.transport_operation_access.get_schedule_by_transport_operation_id(
-                    transportOperationId
+                    transportOperationId, operator_id
                 )
             )
 
@@ -476,6 +504,9 @@ class TransportOperationAPI:
             Response: The response with the phase data or error message.
         """
         try:
+            # Get query parameters
+            operator_id = request.args.get("operatorId")
+
             # Validate required parameters
             if not transportOperationId:
                 return (
@@ -492,7 +523,7 @@ class TransportOperationAPI:
             # Call sub-API to get phase data
             phase_data = (
                 self.transport_operation_access.get_phase_by_transport_operation_id(
-                    transportOperationId
+                    transportOperationId, operator_id
                 )
             )
 
@@ -756,6 +787,9 @@ class TransportOperationAPI:
             Response: The response with the document data or error message.
         """
         try:
+            # Get query parameters
+            operator_id = request.args.get("operatorId")
+
             # Validate required parameters
             if not transportOperationId:
                 return (
@@ -772,7 +806,7 @@ class TransportOperationAPI:
             # Call sub-API to get document data
             document_data = (
                 self.transport_operation_access.get_document_by_transport_operation_id(
-                    transportOperationId
+                    transportOperationId, operator_id
                 )
             )
 
@@ -1096,6 +1130,9 @@ class TransportOperationAPI:
             Response: The response with the transport operation data or error message.
         """
         try:
+            # Get query parameters
+            phase_state = request.args.get("phaseState")
+
             # Validate required parameters
             if not countryCode or not plateNumber:
                 return (
@@ -1109,10 +1146,10 @@ class TransportOperationAPI:
                     400,
                 )
 
-            # Call sub-API to get transport operation data
+            # Call sub-API to get data
             transport_operation_data = (
                 self.transport_operation_access.get_transport_operation_by_plate_number(
-                    countryCode, plateNumber
+                    countryCode, plateNumber, phase_state
                 )
             )
 
@@ -1602,6 +1639,213 @@ class TransportOperationAPI:
                     # HTTP status code for resource not found
                     404,
                 )
+
+        except Exception as e:
+            # Handle unexpected server errors
+            return jsonify({"error": "Internal Server Error", "message": str(e)}), 500
+
+    def add_ecmr(self) -> Response:
+        """
+        Create new eCMR data.
+
+        Args:
+            None
+
+        Returns:
+            Response: The response indicating success or error with status code.
+        """
+        try:
+            # Parse JSON data from the request body
+            data = request.get_json()
+
+            # Validate and map data to the EcmrModel model
+            validated_data = EcmrModel(**data)
+
+            # Call sub-API to add eCMR data
+            ecmr_data = self.transport_operation_access.add_ecmr(validated_data)
+
+            return (
+                jsonify(
+                    {
+                        "message": "eCMR data created successfully",
+                        # Serialize the response data
+                        "data": ecmr_data.model_dump(),
+                    }
+                ),
+                # HTTP status code for resource created
+                201,
+            )
+
+        except ValueError as e:
+            # Handle bad request errors
+            return jsonify({"error": "Bad request", "message": str(e)}), 400
+
+        except Exception as e:
+            # Handle unexpected server errors
+            return jsonify({"error": "Internal Server Error", "message": str(e)}), 500
+
+    def get_ecmr_by_id(self, id: UUID) -> Response:
+        """
+        Get eCMR data by ID.
+
+        Args:
+            id (UUID): The ID assigned to the eCMR by the eCMR Connector service upon creation.
+
+        Returns:
+            Response: The response with the eCMR data or error message.
+        """
+        try:
+            # Validate required parameters
+            if not id:
+                return (
+                    jsonify(
+                        {
+                            "error": "Bad request",
+                            "message": "eCMR ID is required",
+                        }
+                    ),
+                    400,
+                )
+
+            # Call sub-API to get eCMR data by ID
+            ecmr_data = self.transport_operation_access.get_ecmr_by_id(id)
+
+            # Check if data is available
+            if ecmr_data:
+                # Validate and map data to the EcmrModel model
+                validated_data = EcmrModel(**ecmr_data)
+                return (
+                    jsonify(
+                        {
+                            "message": "eCMR data retrieved successfully",
+                            # Serialize the response data
+                            "data": validated_data.model_dump(),
+                        }
+                    ),
+                    # HTTP status code for successful retrieval
+                    200,
+                )
+            # Handle case where no data is found
+            return (
+                jsonify({"error": "Not Found", "message": "eCMR data not found"}),
+                # HTTP status code for resource not found
+                404,
+            )
+
+        except Exception as e:
+            # Handle unexpected server errors
+            return jsonify({"error": "Internal Server Error", "message": str(e)}), 500
+
+    def update_ecmr_by_id(self, id: UUID) -> Response:
+        """
+        Update eCMR data by ID.
+
+        Args:
+            id (UUID): The ID assigned to the eCMR by the eCMR Connector service upon creation.
+
+        Returns:
+            Response: The response indicating success or error with status code.
+        """
+        try:
+            # Validate required parameters
+            if not id:
+                return (
+                    jsonify(
+                        {
+                            "error": "Bad request",
+                            "message": "eCMR ID is required",
+                        }
+                    ),
+                    400,
+                )
+
+            # Call sub-API to get eCMR data by ID
+            ecmr_data = self.transport_operation_access.get_ecmr_by_id(id)
+
+            # Check if data is available
+            if not ecmr_data:
+                return (
+                    jsonify(
+                        {
+                            "error": "Not Found",
+                            "message": "eCMR data not found",
+                        }
+                    ),
+                    # HTTP status code for resource not found
+                    404,
+                )
+
+            # Parse JSON data from the request body
+            data = request.get_json()
+
+            # Call sub-API to update eCMR data by ID
+            updated_ecmr_data = self.transport_operation_access.update_ecmr_by_id(
+                id, data
+            )
+
+            # Validate and map data to the EcmrModel model
+            validated_updated_ecmr_data = EcmrModel(**updated_ecmr_data)
+
+            return (
+                jsonify(
+                    {
+                        "message": "eCMR data updated successfully",
+                        # Serialize the response data
+                        "data": validated_updated_ecmr_data.model_dump(),
+                    }
+                ),
+                # HTTP status code for successful update
+                200,
+            )
+
+        except Exception as e:
+            # Handle unexpected server errors
+            return jsonify({"error": "Internal Server Error", "message": str(e)}), 500
+
+    def delete_ecmr_by_id(self, id: UUID) -> Response:
+        """
+        Delete an eCMR by ID.
+
+        Args:
+            id (UUID): The ID assigned to the eCMR by the eCMR Connector service upon creation.
+
+        Returns:
+            Response: The response indicating success or error with status code.
+        """
+        try:
+            # Validate required parameters
+            if not id:
+                return (
+                    jsonify(
+                        {
+                            "error": "Bad request",
+                            "message": "eCMR ID is required",
+                        }
+                    ),
+                    # HTTP status code for bad request
+                    400,
+                )
+
+            # Call sub-API to delete eCMR by ID
+            is_deleted = self.transport_operation_access.delete_ecmr_by_id(id)
+
+            # Check if the deletion was successful
+            if is_deleted:
+                return (
+                    jsonify({"message": "eCMR data deleted successfully"}),
+                    204,  # HTTP status code for successful deletion
+                )
+
+            # Handle case where the eCMR is not found
+            return (
+                jsonify(
+                    {
+                        "error": "Not Found",
+                        "message": "eCMR data not found",
+                    }
+                ),
+                404,  # HTTP status code for resource not found
+            )
 
         except Exception as e:
             # Handle unexpected server errors

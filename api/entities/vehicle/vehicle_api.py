@@ -298,7 +298,7 @@ class VehicleAPI:
                         }
                     ),
                     # HTTP status code for successful deletion
-                    200,
+                    204,
                 )
 
             # Handle case where the vehicle is not found

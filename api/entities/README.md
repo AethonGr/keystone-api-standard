@@ -1,10 +1,11 @@
-The `entities` folder contains APIs, access scripts and logic for querying and managing data. Each subfolder focuses on a specific domain, such as transport operations, drivers, or vehicles. These subfolders include APIs and modular access logic specific to their respective domains.
+The `entities` folder contains APIs, access scripts and logic for querying and managing data. Each subfolder focuses on a specific domain, such as transport operations, drivers, vehicles, or organizations. These subfolders include APIs and modular access logic specific to their respective domains.
 
 ## Subfolders
 
 - **`driver/`**: Contains APIs and modular access logic for managing driver-related operations.
 - **`vehicle/`**: Contains APIs and modular access logic for managing vehicle-related operations.
 - **`transport_operation/`**: Contains APIs and modular access logic for managing transport operation-related operations.
+- **`organization/`**: Contains APIs and modular access logic for managing organization-related operations.
 
 ## Usage
 

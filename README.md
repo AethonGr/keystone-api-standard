@@ -28,6 +28,14 @@ Conceptually, the KEYSTONE API Standard works as a guidance framework: every Dat
 
 The KEYSTONE API Standard follows semantic versioning to manage and track changes. Each version is tagged in the repository, allowing users to download specific releases.
 
+### v0.2.0
+
+This version introduces significant enhancements to the KEYSTONE API Standard, including:
+- Integration of `eCMR` as a new data object, based on v0.1 from the [Open Logistics Foundation](https://openlogisticsfoundation.org/ecmr/).
+- A new `Organization` entity with full CRUD methods and a corresponding sample server.
+- Data model updates, including new attributes for `Location` and `Organization`.
+- Enhanced filtering capabilities across multiple `transport-operations` endpoints, allowing for more specific queries.
+
 ### v0.1.0
 
 The initial release of the KEYSTONE API Standard includes:
@@ -83,6 +91,7 @@ Modify the `_access.py` scripts located in the `entities` folder within the `api
 - `driver_access.py` for driver-related operations.
 - `vehicle_access.py` for vehicle-related operations.
 - `transport_operation_access.py` for transport operation-related operations.
+- `organization_access.py` for organization-related operations.
 
 ### 5. Deploy
 

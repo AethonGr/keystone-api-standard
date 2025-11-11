@@ -11,7 +11,7 @@ with open("requirements.txt", "r", encoding="utf-8") as f:
 # Setup configuration
 setup(
     name="keystone-api-standard",
-    version="0.1.0",
+    version="0.2.0",
     author="AETHON Engineering",
     author_email="info@aethon.gr",
     description="A robust and modular framework designed to standardize logistics operations APIs.",

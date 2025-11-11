@@ -6,6 +6,7 @@ from .data_model import (
     License,
     Location,
     Mode,
+    Organization,
     Owner,
     Phase,
     Revision,
@@ -15,6 +16,7 @@ from .data_model import (
     TransportOperation,
     Vehicle,
 )
+from .ecmr import EcmrModel
 
 __all__ = [
     "Driver",
@@ -32,4 +34,6 @@ __all__ = [
     "TransportOperation",
     "Location",
     "Mode",
+    "Organization",
+    "EcmrModel",
 ]

@@ -8,6 +8,7 @@ The folder includes the following server samples:
 - **`transport_operation_server.py`**: A dedicated server for managing transport operation-related APIs.
 - **`vehicle_server.py`**: A dedicated server for managing vehicle-related APIs.
 - **`driver_server.py`**: A dedicated server for managing driver-related APIs.
+- **`organization_server.py`**: A dedicated server for managing organization-related APIs.
 - **`api_demonstration/`**: The main API folder containing implementation of the KEYSTONE API Standard, including endpoint handlers and the orchestrator API.
 - **`data_samples/`**: Contains JSON files that simulate databases for demonstration purposes, providing sample data for transport operations, vehicles, and drivers.
 - **`utils/`**: Contains utility modules which provide helper functions for interacting with JSON data storage.
@@ -61,6 +62,10 @@ The following API endpoints demonstrate how to interact with the APIs using the 
   - Exists: [http://127.0.0.1:5000/transport-operations/IT/AA1232/](http://127.0.0.1:5000/transport-operations/IT/AA1232/)
   - Exists: [http://127.0.0.1:5000/transport-operations/IT/BB4567/](http://127.0.0.1:5000/transport-operations/IT/BB4567/)
 
+#### Organization Server
+
+- **Get all organization data**:
+  - Exists: [http://127.0.0.1:5000/organizations/](http://127.0.0.1:5000/organizations/)
 
 ## Features
 

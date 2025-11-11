@@ -23,6 +23,10 @@ transport_operation:
   get_document_by_plate_number_and_reference_code: "/transport-operations/<countryCode>/<plateNumber>/documents/<referenceCode>/"
   get_location: "/transport-operations/locations/"
   get_location_by_mode: "/transport-operations/locations/<mode>/" 
+  add_ecmr: "/transport-operations/ecmr/"
+  get_ecmr_by_id: "/transport-operations/ecmr/<ecmrId>"
+  update_ecmr_by_id: "/transport-operations/ecmr/<ecmrId>"
+  delete_ecmr_by_id: "/transport-operations/ecmr/<ecmrId>"
 
 vehicle:
   add_vehicle: "/vehicles/"
@@ -49,3 +53,10 @@ driver:
   get_traffic_violation_by_vat_and_traffic_violation_id: "/drivers/<countryCode>/<vat>/traffic-violations/<trafficViolationId>/"
   get_tachograph_card_by_vat: "/drivers/<countryCode>/<vat>/tachograph-cards/"
   get_tachograph_card_by_vat_and_tachograph_card_id: "/drivers/<countryCode>/<vat>/tachograph-cards/<tachographCardId>/"
+
+organization:
+  add_organization: "/organizations/"
+  get_organization: "/organizations/"
+  get_organization_by_id: "/organizations/<organizationId>/"
+  update_organization_by_id: "/organizations/<organizationId>/"
+  delete_organization_by_id: "/organizations/<organizationId>/"

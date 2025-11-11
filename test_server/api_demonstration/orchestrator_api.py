@@ -7,9 +7,11 @@ to provide endpoints for creating, retrieving, updating, and deleting transport
 operation data.
 """
 
+from uuid import UUID
+
 from flask import Response
 
-from .entities import DriverAPI, TransportOperationAPI, VehicleAPI
+from .entities import DriverAPI, OrganizationAPI, TransportOperationAPI, VehicleAPI
 
 
 class OrchestratorAPI:
@@ -40,6 +42,8 @@ class OrchestratorAPI:
         self.vehicle_api = VehicleAPI()
         # Initialize sub-APIs for drivers
         self.driver_api = DriverAPI()
+        # Initialize sub-APIs for organizations
+        self.organization_api = OrganizationAPI()
 
     # Delegate transport operation endpoints
     def add_transport_operation(self) -> Response:
@@ -415,6 +419,54 @@ class OrchestratorAPI:
         """
         return self.transport_operation_api.get_location_by_mode(mode)
 
+    def add_ecmr(self) -> Response:
+        """
+        Add eCMR data.
+
+        Args:
+            None
+
+        Returns:
+            Response: The response from the TransportOperationAPI.
+        """
+        return self.transport_operation_api.add_ecmr()
+
+    def get_ecmr_by_id(self, id: UUID) -> Response:
+        """
+        Retrieve specrific eCMR data.
+
+        Args:
+            id (UUID): The ID assigned to the eCMR by the eCMR Connector service upon creation.
+
+        Returns:
+            Response: The response from the TransportOperationAPI.
+        """
+        return self.transport_operation_api.get_ecmr_by_id(id)
+
+    def update_ecmr_by_id(self, id: UUID) -> Response:
+        """
+        Update eCMR data by ID.
+
+        Args:
+            id (UUID): The ID assigned to the eCMR by the eCMR Connector service upon creation.
+
+        Returns:
+            Response: The response from the TransportOperationAPI.
+        """
+        return self.transport_operation_api.update_ecmr_by_id(id)
+
+    def delete_ecmr_by_id(self, id: UUID) -> Response:
+        """
+        Delete an eCMR by ID.
+
+        Args:
+            id (UUID): The ID assigned to the eCMR by the eCMR Connector service upon creation.
+
+        Returns:
+            Response: The response from the TransportOperationAPI.
+        """
+        return self.transport_operation_api.delete_ecmr_by_id(id)
+
     # Delegate vehicle endpoints
     def add_vehicle(self) -> Response:
         """
@@ -736,3 +788,64 @@ class OrchestratorAPI:
         return self.driver_api.get_tachograph_card_by_vat_and_tachograph_card_id(
             countryCode, vat, tachographCardId
         )
+
+    # Delegate organization endpoints
+    def add_organization(self) -> Response:
+        """
+        Add a new organization.
+
+        Args:
+            None
+
+        Returns:
+            Response: The response from the OrganizationAPI.
+        """
+        return self.organization_api.add_organization()
+
+    def get_organization(self) -> Response:
+        """
+        Retrieve all organizations.
+
+        Args:
+            None
+
+        Returns:
+            Response: The response from the OrganizationAPI.
+        """
+        return self.organization_api.get_organization()
+
+    def get_organization_by_id(self, organizationId: int) -> Response:
+        """
+        Retrieve an organization by its ID.
+
+        Args:
+            organizationId (int): The ID of the organization.
+
+        Returns:
+            Response: The response from the OrganizationAPI.
+        """
+        return self.organization_api.get_organization_by_id(organizationId)
+
+    def update_organization_by_id(self, organizationId: int) -> Response:
+        """
+        Update an organization by its ID.
+
+        Args:
+            organizationId (int): The ID of the organization.
+
+        Returns:
+            Response: The response from the OrganizationAPI.
+        """
+        return self.organization_api.update_organization_by_id(organizationId)
+
+    def delete_organization_by_id(self, organizationId: int) -> Response:
+        """
+        Delete an organization by its ID.
+
+        Args:
+            organizationId (int): The ID of the organization.
+
+        Returns:
+            Response: The response from the OrganizationAPI.
+        """
+        return self.organization_api.delete_organization_by_id(organizationId)

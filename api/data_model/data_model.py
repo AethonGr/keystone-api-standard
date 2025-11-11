@@ -8,53 +8,10 @@ attributes with appropriate data types, validations, and constraints.
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Field, RootModel
+from pydantic import Field, RootModel
 
-
-class HandleBaseModel(BaseModel):
-    """
-    Base class to handle serialization of enums and nested models to strings.
-    This class extends the BaseModel from Pydantic and overrides the model_dump method
-    to ensure that enums and nested models are converted to their string representations
-    when the model is serialized.
-    """
-
-    def model_dump(self, **kwargs):
-        """
-        Override the model_dump method to convert enums and nested models to strings for serialization.
-
-        Args:
-            **kwargs: Additional keyword arguments.
-
-        Returns:
-            dict: A dictionary representation of the model with enums converted to strings.
-        """
-        # Call the original model_dump method to get the data
-        data = super().model_dump(**kwargs)
-
-        # Recursively process the data
-        def process_value(value):
-            """
-            Recursively process values to convert enums and nested models.
-
-            Args:
-                value: The value to process.
-
-            Returns:
-                The processed value.
-            """
-            if isinstance(value, Enum):
-                return value.value  # Convert enum to its value
-            elif isinstance(value, list):
-                return [process_value(v) for v in value]  # Process list elements
-            elif isinstance(value, dict):
-                return {k: process_value(v) for k, v in value.items()}  # Process dict
-            elif isinstance(value, BaseModel):
-                return value.model_dump()  # Process nested models
-            return value  # Return value as is if no processing needed
-
-        # Apply processing to all items in the data
-        return {key: process_value(value) for key, value in data.items()}
+from .base import HandleBaseModel
+from .ecmr import EcmrModel
 
 
 class Payload(RootModel):
@@ -113,6 +70,9 @@ class Location(HandleBaseModel):
     """
 
     id: int = Field(..., ge=1, description="Unique identifier for the location.")
+    countryCode: str = Field(
+        ..., pattern="^[A-Z]{2,4}$", description="Country code of the location."
+    )
     description: str = Field(
         ..., min_length=1, max_length=100, description="Description of the location."
     )
@@ -470,17 +430,28 @@ class Phase(HandleBaseModel):
     payload: Optional[Payload] = Field(None, description="Additional information.")
 
 
+class OrganizationType(Enum):
+    """
+    Enum representing the type of the organization.
+    """
+
+    OPERATOR = "OPERATOR"
+    CUSTOMER = "CUSTOMER"
+
+
 class Organization(HandleBaseModel):
     """
     Represents details about an organization.
     """
 
+    id: int = Field(..., ge=1, description="Unique identifier for the organization.")
     name: str = Field(
         ..., min_length=1, max_length=20, description="Name of the organization."
     )
     countryCode: str = Field(
         ..., pattern="^[A-Z]{2,4}$", description="Country code of the organization."
     )
+    type: OrganizationType = Field(..., description="Type of the organization.")
     vat: Optional[str] = Field(
         None, min_length=2, max_length=13, description="VAT number of the organization."
     )
@@ -614,9 +585,13 @@ class TransportOperation(HandleBaseModel):
     phase: Optional[List[Phase]] = Field(
         None, description="List of the operation phases."
     )
-    document: List[Document] = Field(
-        ...,
+    document: Optional[List[Document]] = Field(
+        None,
         description="List of international consignment notes used for the transport operation.",
+    )
+    ecmr: Optional[List[EcmrModel]] = Field(
+        None,
+        description="List of eCMR documents associated with the transport operation.",
     )
     payload: Optional[Payload] = Field(
         None, description="Additional information about the transport operation."

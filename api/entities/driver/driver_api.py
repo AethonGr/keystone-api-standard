@@ -285,7 +285,7 @@ class DriverAPI:
                         }
                     ),
                     # HTTP status code for successful deletion
-                    200,
+                    204,
                 )
 
             # Handle case where the driver is not found

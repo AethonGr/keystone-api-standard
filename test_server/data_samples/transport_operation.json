@@ -2,10 +2,12 @@
   {
     "id": 123456789,
     "operator": {
+      "id": 123456789,
       "name": "ABC Logistics",
       "countryCode": "IT",
       "vat": "IT1234567890",
-      "address": "123 Main St, City, Country"
+      "address": "123 Main St, City, Country",
+      "type": "OPERATOR"
     },
     "schedule": {
       "departureDateTime": "2023-06-25T10:00:00Z",
@@ -111,6 +113,7 @@
         "id": 1,
         "location": {
           "id": 123456789,
+          "countryCode": "IT",
           "description": "Place X",
           "mode": "GENERIC",
           "coordinates": {
@@ -126,19 +129,24 @@
       {
         "referenceCode": "DOC-123456789",
         "senderOrganization": {
+          "id": 123456789,
           "name": "ABC Logistics",
           "countryCode": "IT",
           "vat": "IT1234567890",
-          "address": "123 Main St, City, Country"
+          "address": "123 Main St, City, Country",
+          "type": "OPERATOR"
         },
         "receiverOrganization": {
-          "name": "ABC Logistics",
+          "id": 987654321,
+          "name": "XYZ Transport",
           "countryCode": "IT",
-          "vat": "IT1234567890",
-          "address": "123 Main St, City, Country"
+          "vat": "IT0987654321",
+          "address": "123 Main St, City, Country",
+          "type": "CUSTOMER"
         },
         "startingPoint": {
           "id": 123456789,
+          "countryCode": "IT",
           "description": "Place X",
           "mode": "GENERIC",
           "coordinates": {
@@ -148,6 +156,7 @@
         },
         "endingPoint": {
           "id": 123456789,
+          "countryCode": "IT",
           "description": "Place X",
           "mode": "GENERIC",
           "coordinates": {
@@ -179,10 +188,12 @@
   {
     "id": 123456790,
     "operator": {
+      "id": 987654321,
       "name": "XYZ Transport",
       "countryCode": "IT",
       "vat": "IT0987654321",
-      "address": "456 Elm St, City, Country"
+      "address": "456 Elm St, City, Country",
+      "type": "OPERATOR"
     },
     "schedule": {
       "departureDateTime": "2023-06-26T10:00:00Z",
@@ -245,6 +256,7 @@
         "id": 1,
         "location": {
           "id": 123456790,
+          "countryCode": "IT",
           "description": "Place Y",
           "mode": "GENERIC"
         },
@@ -256,24 +268,30 @@
       {
         "referenceCode": "DOC-987654321",
         "senderOrganization": {
+          "id": 987654321,
           "name": "XYZ Transport",
           "countryCode": "IT",
           "vat": "IT0987654321",
-          "address": "456 Elm St, City, Country"
+          "address": "456 Elm St, City, Country",
+          "type": "OPERATOR"
         },
         "receiverOrganization": {
+          "id": 987654321,
           "name": "XYZ Transport",
           "countryCode": "IT",
           "vat": "IT0987654321",
-          "address": "456 Elm St, City, Country"
+          "address": "456 Elm St, City, Country",
+          "type": "CUSTOMER"
         },
         "startingPoint": {
           "id": 123456790,
+          "countryCode": "IT",
           "description": "Place Y",
           "mode": "GENERIC"
         },
         "endingPoint": {
           "id": 123456790,
+          "countryCode": "IT",
           "description": "Place Y",
           "mode": "GENERIC"
         },

@@ -88,6 +88,14 @@ class UnifiedServer:
             methods=["GET"],
         )
 
+        # Organization endpoints
+        self.app.add_url_rule(
+            self.endpoints_handler.get_endpoint("organization", "get_organization"),
+            "get_organization",
+            self.orchestrator_api.get_organization,
+            methods=["GET"],
+        )
+
     def run(self):
         """
         Run the Flask server.

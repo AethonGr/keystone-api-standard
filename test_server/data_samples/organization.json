@@ -1,0 +1,18 @@
+[
+    {
+        "id": 123456789,
+        "name": "ABC Logistics",
+        "countryCode": "IT",
+        "vat": "IT1234567890",
+        "address": "123 Main St, City, Country",
+        "type": "OPERATOR"
+    },
+    {
+        "id": 987654321,
+        "name": "XYZ Transport",
+        "countryCode": "DE",
+        "vat": "DE0987654321",
+        "address": "456 Elm St, City, Country",
+        "type": "CUSTOMER"
+    }
+]
