@@ -113,7 +113,7 @@
         "id": 1,
         "location": {
           "id": 123456789,
-          "countryCode": "IT",
+          "internationalCode": "ITMIL",
           "description": "Place X",
           "mode": "GENERIC",
           "coordinates": {
@@ -146,7 +146,7 @@
         },
         "startingPoint": {
           "id": 123456789,
-          "countryCode": "IT",
+          "internationalCode": "ITMIL",
           "description": "Place X",
           "mode": "GENERIC",
           "coordinates": {
@@ -156,7 +156,7 @@
         },
         "endingPoint": {
           "id": 123456789,
-          "countryCode": "IT",
+          "internationalCode": "FRPAR",
           "description": "Place X",
           "mode": "GENERIC",
           "coordinates": {
@@ -256,7 +256,7 @@
         "id": 1,
         "location": {
           "id": 123456790,
-          "countryCode": "IT",
+          "internationalCode": "ITROM",
           "description": "Place Y",
           "mode": "GENERIC"
         },
@@ -285,13 +285,13 @@
         },
         "startingPoint": {
           "id": 123456790,
-          "countryCode": "IT",
+          "internationalCode": "ITROM",
           "description": "Place Y",
           "mode": "GENERIC"
         },
         "endingPoint": {
           "id": 123456790,
-          "countryCode": "IT",
+          "internationalCode": "ITNAP",
           "description": "Place Y",
           "mode": "GENERIC"
         },

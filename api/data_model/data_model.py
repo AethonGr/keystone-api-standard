@@ -70,8 +70,10 @@ class Location(HandleBaseModel):
     """
 
     id: int = Field(..., ge=1, description="Unique identifier for the location.")
-    countryCode: str = Field(
-        ..., pattern="^[A-Z]{2,4}$", description="Country code of the location."
+    internationalCode: str = Field(
+        ...,
+        pattern=r"^[A-Z]{2}[A-Z0-9]{3}$",
+        description="International code of the location (UN/LOCODE).",
     )
     description: str = Field(
         ..., min_length=1, max_length=100, description="Description of the location."

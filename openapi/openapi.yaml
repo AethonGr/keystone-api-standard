@@ -194,20 +194,20 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/Mode'
-        - name: startingPointCountryCode
+        - name: startingPointInternationalCode
           in: query
-          description: "Filter by the country code of the starting point."
+          description: "Filter by the international code of the starting point location (UN/LOCODE)."
           required: false
           schema:
             type: string
-            pattern: "^[A-Z]{2,4}$"
-        - name: endingPointCountryCode
+            pattern: "^[A-Z]{2}[A-Z0-9]{3}$"
+        - name: endingPointInternationalCode
           in: query
-          description: "Filter by the country code of the ending point."
+          description: "Filter by the international code of the ending point location (UN/LOCODE)."
           required: false
           schema:
             type: string
-            pattern: "^[A-Z]{2,4}$"
+            pattern: "^[A-Z]{2}[A-Z0-9]{3}$"
       responses:
         '200':
           description: Transport operation data retrieved successfully  
@@ -550,7 +550,7 @@ paths:
                     location:
                       id: 54546546
                       description: "Warehouse A"
-                      countryCode: "IT"
+                      internationalCode: "ITMIL"
                       coordinates:
                         latitude: 45.4642
                         longitude: 9.1900
@@ -561,7 +561,7 @@ paths:
                     location:
                       id: 54546546
                       description: "Warehouse A"
-                      countryCode: "FR"
+                      internationalCode: "FRPAR"
                       coordinates:
                         latitude: 48.8566
                         longitude: 2.3522
@@ -826,7 +826,7 @@ paths:
                     startingPoint:
                       id: 54546546
                       description: "Warehouse A"
-                      countryCode: "IT"
+                      internationalCode: "ITMIL"
                       coordinates:
                         latitude: 45.4642
                         longitude: 9.1900
@@ -834,7 +834,7 @@ paths:
                     endingPoint:
                       id: 22252535
                       description: "Warehouse B"
-                      countryCode: "FR"
+                      internationalCode: "FRPAR"
                       coordinates:
                         latitude: 48.8566
                         longitude: 2.3522
@@ -878,7 +878,7 @@ paths:
                     startingPoint:
                       id: 54546546
                       description: "Warehouse C"
-                      countryCode: "IT"
+                      internationalCode: "ITMIL"
                       coordinates:
                         latitude: 40.7128
                         longitude: -74.0060
@@ -886,7 +886,7 @@ paths:
                     endingPoint:
                       id: 22252535
                       description: "Warehouse D"
-                      countryCode: "IT"
+                      internationalCode: "FRPAR"
                       coordinates:
                         latitude: 34.0522
                         longitude: -118.2437
@@ -1327,7 +1327,7 @@ paths:
                     location:
                       id: 54546546
                       description: "Warehouse A"
-                      countryCode: "IT"
+                      internationalCode: "ITMIL"
                       coordinates:
                         latitude: 45.4642
                         longitude: 9.1900
@@ -1338,7 +1338,7 @@ paths:
                     location:
                       id: 44546544
                       description: "Warehouse A"
-                      countryCode: "FR"
+                      internationalCode: "FRPAR"
                       coordinates:
                         latitude: 48.8566
                         longitude: 2.3522
@@ -1491,7 +1491,7 @@ paths:
                     startingPoint:
                       id: 54546546
                       description: "Warehouse A"
-                      countryCode: "IT"
+                      internationalCode: "ITMIL"
                       coordinates:
                         latitude: 45.4642
                         longitude: 9.1900
@@ -1499,7 +1499,7 @@ paths:
                     endingPoint:
                       id: 22252535
                       description: "Warehouse B"
-                      countryCode: "FR"
+                      internationalCode: "FRPAR"
                       coordinates:
                         latitude: 48.8566
                         longitude: 2.3522
@@ -1543,7 +1543,7 @@ paths:
                     startingPoint:
                       id: 45355554
                       description: "Warehouse C"
-                      countryCode: "IT"
+                      internationalCode: "ITMIL"
                       coordinates:
                         latitude: 40.7128
                         longitude: -74.0060
@@ -1551,7 +1551,7 @@ paths:
                     endingPoint:
                       id: 49252535
                       description: "Warehouse D"
-                      countryCode: "IT"
+                      internationalCode: "FRPAR"
                       coordinates:
                         latitude: 34.0522
                         longitude: -118.2437
@@ -3895,7 +3895,7 @@ components:
       required:
       - id
       - description
-      - countryCode
+      - internationalCode
       - mode
       description: Details about the location.
       additionalProperties: false
@@ -3912,11 +3912,11 @@ components:
           description: Description about the location.
           example: "Place X"
           pattern: "^[\\s\\S]{1,100}$"
-        countryCode:
+        internationalCode:
           type: string
-          description: Country code of the location.
-          example: "IT"
-          pattern: "^[A-Z]{2,4}$"
+          description: International code of the location (UN/LOCODE).
+          example: "ITMIA"
+          pattern: "^[A-Z]{2}[A-Z0-9]{3}$"
         mode:
           $ref: '#/components/schemas/Mode'
         coordinates:

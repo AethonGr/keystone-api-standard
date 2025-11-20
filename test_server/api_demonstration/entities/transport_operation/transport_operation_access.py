@@ -68,8 +68,8 @@ class TransportOperationAccess:
         operator_id: Optional[str] = None,
         driver_id: Optional[str] = None,
         location_mode: Optional[str] = None,
-        start_point_country_code: Optional[str] = None,
-        end_point_country_code: Optional[str] = None,
+        starting_point_international_code: Optional[str] = None,
+        ending_point_international_code: Optional[str] = None,
     ) -> Optional[List[TransportOperation]]:
         """
         Get all transport operation data.
@@ -78,8 +78,8 @@ class TransportOperationAccess:
             operator_id (Optional[str]): The unique identifier of the transport operation's operator
             driver_id (Optional[str]): The unique identifier of the driver assigned to the transport operation
             location_mode (Optional[str]): The mode of any location associated with the transport operation
-            start_point_country_code (Optional[str]): The country code of the starting point
-            end_point_country_code (Optional[str]): The country code of the ending point
+            starting_point_international_code (Optional[str]): The international code of the starting point location (UN/LOCODE)
+            ending_point_international_code (Optional[str]): The international code of the ending point location (UN/LOCODE)
 
         Returns:
            Optional[List[TransportOperation]]: List of transport operation data if found

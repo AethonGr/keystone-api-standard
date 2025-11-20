@@ -99,8 +99,12 @@ class TransportOperationAPI:
             operator_id = request.args.get("operatorId")
             driver_id = request.args.get("driverId")
             location_mode = request.args.get("locationMode")
-            start_point_country_code = request.args.get("startPointCountryCode")
-            end_point_country_code = request.args.get("endPointCountryCode")
+            starting_point_international_code = request.args.get(
+                "startingPointInternationalCode"
+            )
+            ending_point_international_code = request.args.get(
+                "endingPointInternationalCode"
+            )
 
             # Call sub-API to get data
             transport_operation_data = (
@@ -108,8 +112,8 @@ class TransportOperationAPI:
                     operator_id,
                     driver_id,
                     location_mode,
-                    start_point_country_code,
-                    end_point_country_code,
+                    starting_point_international_code,
+                    ending_point_international_code,
                 )
             )
 
